@@ -1,13 +1,13 @@
 // Prisma schema for the B2B shop budget-tracking app.
-// SQLite is used for zero-setup local development. Money is stored as integer cents.
-// Enums are not supported on SQLite, so role/action/entityType are strings validated in app code.
+// Postgres is used in all environments. Money is stored as integer cents.
+// role/action/entityType are strings validated in app code.
 
 generator client {
   provider = "prisma-client-js"
 }
 
 datasource db {
-  provider = "sqlite"
+  provider = "postgresql"
   url      = env("DATABASE_URL")
 }
 
