@@ -32,10 +32,10 @@ export function SpendingChart({ data }: { data: ChartDatum[] }) {
             tick={{ fontSize: 12, fill: "#64748b" }}
             tickLine={false}
             axisLine={false}
-            tickFormatter={(v) => `$${(v / 100).toLocaleString()}`}
+            tickFormatter={(v) => `€${(v / 100).toLocaleString()}`}
           />
           <Tooltip
-            formatter={(value) => `$${(Number(value) / 100).toLocaleString()}`}
+            formatter={(value) => `€${(Number(value) / 100).toLocaleString()}`}
             contentStyle={{
               borderRadius: 8,
               border: "1px solid #e2e8f0",

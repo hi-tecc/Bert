@@ -11,7 +11,7 @@ export function reportToCsv(report: ReportResult): string {
   lines.push(esc(report.title));
   lines.push(esc(`Period: ${report.rangeLabel}`));
   lines.push("");
-  lines.push(["Date", "Company", "Employee", "Description", "Notes", "Amount (USD)"].map(esc).join(","));
+  lines.push(["Date", "Company", "Employee", "Description", "Notes", "Amount (EUR)"].map(esc).join(","));
 
   for (const r of report.rows) {
     lines.push(

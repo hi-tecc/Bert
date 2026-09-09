@@ -22,7 +22,7 @@ export async function reportToExcel(report: ReportResult): Promise<Buffer> {
     "Employee",
     "Description",
     "Notes",
-    "Amount (USD)",
+    "Amount (EUR)",
   ]);
   header.font = { bold: true };
   header.eachCell((cell) => {
@@ -47,7 +47,7 @@ export async function reportToExcel(report: ReportResult): Promise<Buffer> {
   const totalRow = ws.addRow(["Total", "", "", "", "", fromCents(report.total)]);
   totalRow.font = { bold: true };
 
-  ws.getColumn(6).numFmt = '"$"#,##0.00';
+  ws.getColumn(6).numFmt = '"€"#,##0.00';
   ws.columns.forEach((col) => {
     let max = 10;
     col.eachCell?.({ includeEmpty: false }, (cell) => {
@@ -61,9 +61,9 @@ export async function reportToExcel(report: ReportResult): Promise<Buffer> {
   const sHeader = summary.addRow([
     "Employee",
     "Company",
-    "Budget (USD)",
-    "Spent (USD)",
-    "Remaining (USD)",
+    "Budget (EUR)",
+    "Spent (EUR)",
+    "Remaining (EUR)",
     "Used %",
     "Status",
   ]);
@@ -79,9 +79,9 @@ export async function reportToExcel(report: ReportResult): Promise<Buffer> {
       BUDGET_LEVEL_LABEL[s.status.level],
     ]);
   }
-  summary.getColumn(3).numFmt = '"$"#,##0.00';
-  summary.getColumn(4).numFmt = '"$"#,##0.00';
-  summary.getColumn(5).numFmt = '"$"#,##0.00';
+  summary.getColumn(3).numFmt = '"€"#,##0.00';
+  summary.getColumn(4).numFmt = '"€"#,##0.00';
+  summary.getColumn(5).numFmt = '"€"#,##0.00';
   summary.getColumn(6).numFmt = "0.0%";
   summary.columns.forEach((col) => {
     col.width = 18;

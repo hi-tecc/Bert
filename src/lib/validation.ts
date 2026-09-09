@@ -1,4 +1,5 @@
 import { z } from "zod";
+import { ROLES } from "./constants";
 
 const optionalString = z
   .string()
@@ -45,6 +46,52 @@ export const purchaseSchema = z.object({
   notes: optionalString,
 });
 
+const userBase = z.object({
+  name: z.string().trim().min(1, "Name is required"),
+  email: z.string().trim().email("Enter a valid email"),
+  role: z.enum([ROLES.SHOP_ADMIN, ROLES.COMPANY_ADMIN]),
+  companyId: z
+    .string()
+    .trim()
+    .optional()
+    .transform((v) => (v ? v : null)),
+});
+
+/** A company admin must belong to a company; a shop admin must not. */
+function refineCompany<T extends { role: string; companyId: string | null }>(
+  data: T,
+  ctx: z.RefinementCtx,
+) {
+  if (data.role === ROLES.COMPANY_ADMIN && !data.companyId) {
+    ctx.addIssue({
+      code: z.ZodIssueCode.custom,
+      message: "Company is required for company admins",
+      path: ["companyId"],
+    });
+  }
+}
+
+export const userCreateSchema = userBase
+  .extend({
+    password: z.string().min(8, "Password must be at least 8 characters"),
+  })
+  .superRefine(refineCompany);
+
+export const userUpdateSchema = userBase
+  .extend({
+    // Blank means "keep the current password".
+    password: z
+      .string()
+      .optional()
+      .transform((v) => (v ? v : null))
+      .refine((v) => v === null || v.length >= 8, {
+        message: "Password must be at least 8 characters",
+      }),
+  })
+  .superRefine(refineCompany);
+
 export type CompanyInput = z.infer<typeof companySchema>;
 export type EmployeeInput = z.infer<typeof employeeSchema>;
 export type PurchaseInput = z.infer<typeof purchaseSchema>;
+export type UserCreateInput = z.infer<typeof userCreateSchema>;
+export type UserUpdateInput = z.infer<typeof userUpdateSchema>;

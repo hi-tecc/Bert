@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { Building2, Users, DollarSign, TrendingUp } from "lucide-react";
+import { Building2, Users, Euro, TrendingUp } from "lucide-react";
 import { prisma } from "@/lib/prisma";
 import { formatMoney } from "@/lib/money";
 import { currentYear, yearRange } from "@/lib/budget";
@@ -68,7 +68,7 @@ export async function ShopDashboard() {
           label="Total spending"
           value={formatMoney(allTime._sum.amount ?? 0)}
           hint="All time"
-          icon={DollarSign}
+          icon={Euro}
         />
         <StatCard
           label={`Spending in ${year}`}

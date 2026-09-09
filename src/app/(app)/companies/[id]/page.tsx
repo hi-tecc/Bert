@@ -19,7 +19,7 @@ import { Table, TBody, TD, TH, THead, TR } from "@/components/ui/table";
 import { MobileCard, MobileCardRow } from "@/components/ui/mobile-card";
 import { BudgetBar } from "@/components/ui/budget-bar";
 import { BudgetStatusBadge } from "@/components/budget-status-badge";
-import { Users, Wallet, DollarSign, PiggyBank } from "lucide-react";
+import { Users, Wallet, Euro, PiggyBank } from "lucide-react";
 
 export default async function CompanyDetailPage({
   params,
@@ -100,7 +100,7 @@ export default async function CompanyDetailPage({
             label="Spent"
             value={formatMoney(totalSpent)}
             hint={`${summary.percent}% of budget`}
-            icon={DollarSign}
+            icon={Euro}
           />
           <StatCard
             label="Remaining"

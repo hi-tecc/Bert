@@ -2,6 +2,7 @@ import {
   LayoutDashboard,
   Building2,
   Users,
+  UserCog,
   ShoppingCart,
   FileBarChart,
   History,
@@ -21,6 +22,7 @@ export const NAV_ITEMS: NavItem[] = [
   { href: "/employees", label: "Employees", icon: Users },
   { href: "/purchases", label: "Purchases", icon: ShoppingCart },
   { href: "/reports", label: "Reports", icon: FileBarChart },
+  { href: "/users", label: "Users", icon: UserCog, shopOnly: true },
   { href: "/audit", label: "Audit log", icon: History, shopOnly: true },
 ];
 

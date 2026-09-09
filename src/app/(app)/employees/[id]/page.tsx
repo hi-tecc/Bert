@@ -16,7 +16,7 @@ import { Table, TBody, TD, TH, THead, TR } from "@/components/ui/table";
 import { MobileCard, MobileCardRow } from "@/components/ui/mobile-card";
 import { BudgetBar } from "@/components/ui/budget-bar";
 import { BudgetStatusBadge } from "@/components/budget-status-badge";
-import { Wallet, DollarSign, PiggyBank } from "lucide-react";
+import { Wallet, Euro, PiggyBank } from "lucide-react";
 
 export default async function EmployeeDetailPage({
   params,
@@ -80,7 +80,7 @@ export default async function EmployeeDetailPage({
           label={`Spent in ${year}`}
           value={formatMoney(spent)}
           hint={`${bs.percent}% of budget`}
-          icon={DollarSign}
+          icon={Euro}
         />
         <StatCard label="Remaining" value={formatMoney(bs.remaining)} icon={PiggyBank} />
         <Card className="p-5">

@@ -1,4 +1,4 @@
-import { Users, DollarSign, Wallet, PiggyBank } from "lucide-react";
+import { Users, Euro, Wallet, PiggyBank } from "lucide-react";
 import { notFound } from "next/navigation";
 import { prisma } from "@/lib/prisma";
 import { formatMoney } from "@/lib/money";
@@ -65,7 +65,7 @@ export async function CompanyDashboard({ companyId }: { companyId: string }) {
           label="Spent"
           value={formatMoney(totalSpent)}
           hint={`${summary.percent}% of budget`}
-          icon={DollarSign}
+          icon={Euro}
         />
         <StatCard
           label="Remaining"

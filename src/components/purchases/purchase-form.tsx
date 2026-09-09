@@ -72,7 +72,7 @@ export function PurchaseForm({
                 required
               />
             </Field>
-            <Field label="Amount (USD)" htmlFor="amount" error={fe.amount}>
+            <Field label="Amount (EUR)" htmlFor="amount" error={fe.amount}>
               <Input
                 id="amount"
                 name="amount"
