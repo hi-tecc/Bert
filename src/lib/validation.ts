@@ -53,7 +53,7 @@ const userBase = z.object({
   companyId: z
     .string()
     .trim()
-    .optional()
+    .nullish()
     .transform((v) => (v ? v : null)),
 });
 
