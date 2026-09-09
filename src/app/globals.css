@@ -1,18 +1,28 @@
 @import "tailwindcss";
 
 @theme {
-  --color-background: #f8fafc;
-  --color-surface: #ffffff;
-  --color-border: #e2e8f0;
-  --color-foreground: #0f172a;
-  --color-muted: #64748b;
-  --color-primary: #4f46e5;
-  --color-primary-foreground: #ffffff;
-  --color-success: #16a34a;
-  --color-warning: #d97706;
-  --color-danger: #dc2626;
+  /* Luxury / Editorial palette — warm monochrome with a single gold accent. */
+  --color-background: #f9f8f6; /* Warm alabaster (never pure white) */
+  --color-surface: #fdfcfa; /* Barely-elevated alabaster for cards */
+  --color-muted-bg: #ebe5de; /* Pale taupe for subtle surfaces */
+  --color-border: #1a1a1a1f; /* Charcoal @ 12% — thin, deliberate dividers */
+  --color-foreground: #1a1a1a; /* Rich charcoal (never pure black) */
+  --color-muted: #6c6863; /* Warm grey for secondary text */
+  --color-primary: #1a1a1a; /* Primary actions are charcoal; gold is the reward */
+  --color-primary-foreground: #f9f8f6;
+  --color-accent: #d4af37; /* Metallic gold — accents only, never large areas */
+  --color-accent-foreground: #ffffff;
 
-  --radius: 0.625rem;
+  /* Functional status colours, muted to sit within the palette. */
+  --color-success: #5f7a52;
+  --color-warning: #b7791f;
+  --color-danger: #9b2c2c;
+
+  /* Architectural precision — everything is strictly rectangular. */
+  --radius: 0px;
+
+  --font-sans: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
+  --font-serif: var(--font-playfair), ui-serif, Georgia, "Times New Roman", serif;
 }
 
 * {
@@ -22,7 +32,44 @@
 body {
   background-color: var(--color-background);
   color: var(--color-foreground);
-  font-family: var(--font-geist-sans), ui-sans-serif, system-ui, sans-serif;
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Editorial headings default to the high-contrast serif. */
+h1,
+h2,
+h3,
+h4 {
+  font-family: var(--font-serif);
+  font-weight: 400;
+  letter-spacing: -0.01em;
+}
+
+/* Paper grain — mimics expensive paper; invisible at a glance, tactile in feel. */
+.paper-grain {
+  position: fixed;
+  inset: 0;
+  z-index: 50;
+  pointer-events: none;
+  opacity: 0.025;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+/* Accordion / async content reveal. */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(4px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+.animate-fade-in {
+  animation: fadeIn 0.7s cubic-bezier(0.25, 0.46, 0.45, 0.94) both;
 }
 
 ::-webkit-scrollbar {
@@ -30,6 +77,36 @@ body {
   width: 8px;
 }
 ::-webkit-scrollbar-thumb {
-  background: #cbd5e1;
-  border-radius: 9999px;
+  background: #d8cfc4;
+}
+
+/*
+ * Warm-neutral bridge: pages still reference Tailwind's cool `slate` text
+ * shades for secondary copy. Remap them to the palette's warm greys so every
+ * surface reads as one cohesive monochrome. Prefer the `--color-*` tokens in
+ * new code; these overrides can retire as call sites migrate.
+ */
+@layer utilities {
+  .text-slate-400,
+  .text-slate-500,
+  .text-slate-600 {
+    color: var(--color-muted);
+  }
+  .text-slate-700,
+  .text-slate-800,
+  .text-slate-900 {
+    color: var(--color-foreground);
+  }
+}
+
+/* Respect users who prefer reduced motion — keep colour, drop movement. */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  ::before,
+  ::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
 }

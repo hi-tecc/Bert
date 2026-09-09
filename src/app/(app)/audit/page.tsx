@@ -37,6 +37,7 @@ export default async function AuditPage({
       <PageHeader
         title="Audit log"
         subtitle="All changes across the system"
+        emphasizeLast
       />
 
       <div className="mb-4 flex flex-wrap gap-2">
@@ -47,10 +48,10 @@ export default async function AuditPage({
               key={e}
               href={e === "all" ? "/audit" : `/audit?entity=${e}`}
               className={
-                "rounded-full px-3 py-1 text-sm font-medium " +
+                "rounded-none px-4 py-1.5 text-[11px] font-medium uppercase tracking-[0.15em] transition-colors duration-500 " +
                 (active
-                  ? "bg-[var(--color-primary)] text-white"
-                  : "border border-[var(--color-border)] bg-white text-slate-600 hover:bg-slate-50")
+                  ? "bg-[var(--color-foreground)] text-[var(--color-primary-foreground)]"
+                  : "border border-[var(--color-border)] bg-transparent text-[var(--color-muted)] hover:border-[var(--color-foreground)] hover:text-[var(--color-foreground)]")
               }
             >
               {e === "all" ? "All" : e}

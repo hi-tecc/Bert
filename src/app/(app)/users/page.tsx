@@ -49,7 +49,7 @@ export default async function UsersPage({
         action={
           <Link
             href="/users/new"
-            className="inline-flex h-10 items-center gap-2 rounded-lg bg-[var(--color-primary)] px-4 text-sm font-medium text-white hover:opacity-90"
+            className="inline-flex h-11 items-center gap-2 rounded-none bg-[var(--color-foreground)] px-6 text-xs font-medium uppercase tracking-[0.2em] text-[var(--color-primary-foreground)] shadow-[0_4px_16px_rgba(0,0,0,0.15)] transition-colors duration-500 hover:bg-[var(--color-accent)]"
           >
             <Plus className="h-4 w-4" /> New user
           </Link>
@@ -103,7 +103,7 @@ export default async function UsersPage({
                           <div className="flex justify-end gap-2">
                             <Link
                               href={`/users/${u.id}/edit`}
-                              className="inline-flex h-9 items-center rounded-lg border border-[var(--color-border)] px-3 text-sm font-medium hover:bg-slate-50"
+                              className="inline-flex h-9 items-center rounded-none border border-[var(--color-foreground)] bg-transparent px-5 text-[11px] font-medium uppercase tracking-[0.2em] transition-colors duration-500 hover:bg-[var(--color-foreground)] hover:text-[var(--color-primary-foreground)]"
                             >
                               Edit
                             </Link>
@@ -141,7 +141,7 @@ export default async function UsersPage({
                     <div className="mt-3 flex gap-2">
                       <Link
                         href={`/users/${u.id}/edit`}
-                        className="inline-flex h-9 flex-1 items-center justify-center rounded-lg border border-[var(--color-border)] px-3 text-sm font-medium hover:bg-slate-50"
+                        className="inline-flex h-9 flex-1 items-center justify-center rounded-none border border-[var(--color-foreground)] bg-transparent px-5 text-[11px] font-medium uppercase tracking-[0.2em] transition-colors duration-500 hover:bg-[var(--color-foreground)] hover:text-[var(--color-primary-foreground)]"
                       >
                         Edit
                       </Link>

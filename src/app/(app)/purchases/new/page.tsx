@@ -26,7 +26,7 @@ export default async function NewPurchasePage({
 
   return (
     <div className="max-w-2xl">
-      <PageHeader title="Register purchase" subtitle="Record a new purchase" />
+      <PageHeader title="Register purchase" subtitle="Record a new purchase" emphasizeLast />
       <PurchaseForm
         action={createPurchaseAction}
         employees={options}

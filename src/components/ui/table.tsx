@@ -13,7 +13,7 @@ export function Table({
 }
 
 export function THead(props: React.HTMLAttributes<HTMLTableSectionElement>) {
-  return <thead className="text-left text-xs uppercase tracking-wide text-slate-500" {...props} />;
+  return <thead className="border-b border-[var(--color-foreground)]/15 text-left text-[10px] uppercase tracking-[0.2em] text-[var(--color-muted)]" {...props} />;
 }
 
 export function TBody(props: React.HTMLAttributes<HTMLTableSectionElement>) {
@@ -24,7 +24,7 @@ export function TR({
   className,
   ...props
 }: React.HTMLAttributes<HTMLTableRowElement>) {
-  return <tr className={cn("hover:bg-slate-50", className)} {...props} />;
+  return <tr className={cn("transition-colors duration-500 hover:bg-[var(--color-muted-bg)]/40", className)} {...props} />;
 }
 
 export function TH({

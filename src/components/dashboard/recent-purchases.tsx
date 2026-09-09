@@ -24,7 +24,7 @@ export function RecentPurchases({
   return (
     <Card>
       <CardHeader className="flex items-center justify-between">
-        <CardTitle>Recent purchases</CardTitle>
+        <CardTitle emphasizeLast>Recent purchases</CardTitle>
         <Link
           href="/purchases"
           className="text-sm text-[var(--color-primary)] hover:underline"

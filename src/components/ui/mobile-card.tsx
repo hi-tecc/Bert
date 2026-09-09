@@ -18,7 +18,7 @@ export function MobileCard({
   return (
     <div
       className={cn(
-        "rounded-[var(--radius)] border border-[var(--color-border)] p-4",
+        "rounded-none border border-[var(--color-border)] bg-[var(--color-surface)] p-4 shadow-[0_2px_8px_rgba(0,0,0,0.02)]",
         className,
       )}
       {...props}
@@ -39,8 +39,8 @@ export function MobileCardRow({
     <div
       className={cn("flex items-center justify-between gap-3 text-sm", className)}
     >
-      <span className="text-slate-500">{label}</span>
-      <span className="text-right font-medium text-slate-800">{children}</span>
+      <span className="text-[var(--color-muted)]">{label}</span>
+      <span className="text-right font-medium text-[var(--color-foreground)]">{children}</span>
     </div>
   );
 }

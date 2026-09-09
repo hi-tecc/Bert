@@ -19,7 +19,7 @@ export default async function EditCompanyPage({
 
   return (
     <div className="max-w-2xl">
-      <PageHeader title="Edit company" subtitle={company.name} />
+      <PageHeader title="Edit company" subtitle={company.name} emphasizeLast />
       <CompanyForm
         action={action}
         submitLabel="Save changes"

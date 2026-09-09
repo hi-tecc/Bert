@@ -23,7 +23,7 @@ export default function ForgotPasswordPage() {
         </p>
         <form action={action} className="space-y-4">
           {state.success && (
-            <p className="rounded-md bg-green-50 px-3 py-2 text-sm text-green-700">
+            <p className="border border-[var(--color-success)]/30 px-3 py-2 text-sm text-[var(--color-success)]">
               {state.success} (Check the server console for the link in local
               development.)
             </p>

@@ -25,7 +25,7 @@ export default async function EditUserPage({
 
   return (
     <div className="max-w-2xl">
-      <PageHeader title="Edit user" subtitle={user.email} />
+      <PageHeader title="Edit user" subtitle={user.email} emphasizeLast />
       <UserForm
         action={action}
         companies={companies}

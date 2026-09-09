@@ -1,5 +1,6 @@
 import * as React from "react";
 import { cn } from "@/lib/utils";
+import { emphasizeLastWord } from "./emphasize";
 
 export function Card({
   className,
@@ -8,7 +9,7 @@ export function Card({
   return (
     <div
       className={cn(
-        "rounded-[var(--radius)] border border-[var(--color-border)] bg-[var(--color-surface)] shadow-sm",
+        "rounded-none border border-[var(--color-border)] bg-[var(--color-surface)] shadow-[0_2px_8px_rgba(0,0,0,0.02)]",
         className,
       )}
       {...props}
@@ -25,13 +26,22 @@ export function CardHeader({
 
 export function CardTitle({
   className,
+  emphasizeLast = false,
+  children,
   ...props
-}: React.HTMLAttributes<HTMLHeadingElement>) {
+}: React.HTMLAttributes<HTMLHeadingElement> & { emphasizeLast?: boolean }) {
   return (
     <h3
-      className={cn("text-base font-semibold text-slate-900", className)}
+      className={cn(
+        "font-serif text-lg text-[var(--color-foreground)]",
+        className,
+      )}
       {...props}
-    />
+    >
+      {emphasizeLast && typeof children === "string"
+        ? emphasizeLastWord(children)
+        : children}
+    </h3>
   );
 }
 

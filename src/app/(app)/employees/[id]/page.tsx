@@ -54,14 +54,14 @@ export default async function EmployeeDetailPage({
             {shopAdmin && (
               <Link
                 href={`/purchases/new?employeeId=${id}`}
-                className="inline-flex h-9 items-center gap-2 rounded-lg bg-[var(--color-primary)] px-3 text-sm font-medium text-white hover:opacity-90"
+                className="inline-flex h-9 items-center gap-2 rounded-none bg-[var(--color-foreground)] px-5 text-[11px] font-medium uppercase tracking-[0.2em] text-[var(--color-primary-foreground)] transition-colors duration-500 hover:bg-[var(--color-accent)]"
               >
                 <Plus className="h-4 w-4" /> Add purchase
               </Link>
             )}
             <Link
               href={`/employees/${id}/edit`}
-              className="inline-flex h-9 items-center gap-2 rounded-lg border border-[var(--color-border)] bg-white px-3 text-sm font-medium hover:bg-slate-50"
+              className="inline-flex h-9 items-center gap-2 rounded-none border border-[var(--color-foreground)] bg-transparent px-5 text-[11px] font-medium uppercase tracking-[0.2em] transition-colors duration-500 hover:bg-[var(--color-foreground)] hover:text-[var(--color-primary-foreground)]"
             >
               <Pencil className="h-4 w-4" /> Edit
             </Link>

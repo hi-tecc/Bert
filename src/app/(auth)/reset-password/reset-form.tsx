@@ -21,12 +21,12 @@ export function ResetPasswordForm({ token }: { token: string }) {
         <form action={action} className="space-y-4">
           <input type="hidden" name="token" value={token} />
           {state.error && (
-            <p className="rounded-md bg-red-50 px-3 py-2 text-sm text-red-700">
+            <p className="border border-[var(--color-danger)]/30 px-3 py-2 text-sm text-[var(--color-danger)]">
               {state.error}
             </p>
           )}
           {state.success && (
-            <p className="rounded-md bg-green-50 px-3 py-2 text-sm text-green-700">
+            <p className="border border-[var(--color-success)]/30 px-3 py-2 text-sm text-[var(--color-success)]">
               {state.success}
             </p>
           )}

@@ -92,11 +92,11 @@ export default async function SearchPage({
                 <Link
                   key={c.id}
                   href={`/companies/${c.id}`}
-                  className="block rounded-lg px-3 py-2 text-sm hover:bg-slate-50"
+                  className="block rounded-none px-3 py-2 text-sm transition-colors duration-500 hover:bg-[var(--color-muted-bg)]/40"
                 >
                   <span className="font-medium">{c.name}</span>
                   {c.contactPerson && (
-                    <span className="text-slate-400"> · {c.contactPerson}</span>
+                    <span className="text-[var(--color-muted)]"> · {c.contactPerson}</span>
                   )}
                 </Link>
               ))}
@@ -115,12 +115,12 @@ export default async function SearchPage({
                 <Link
                   key={e.id}
                   href={`/employees/${e.id}`}
-                  className="block rounded-lg px-3 py-2 text-sm hover:bg-slate-50"
+                  className="block rounded-none px-3 py-2 text-sm transition-colors duration-500 hover:bg-[var(--color-muted-bg)]/40"
                 >
                   <span className="font-medium">
                     {e.firstName} {e.lastName}
                   </span>
-                  <span className="text-slate-400">
+                  <span className="text-[var(--color-muted)]">
                     {" "}
                     · {e.company.name} · {e.email}
                   </span>
@@ -141,7 +141,7 @@ export default async function SearchPage({
                 <Link
                   key={p.id}
                   href={`/employees/${p.employeeId}`}
-                  className="flex items-center justify-between rounded-lg px-3 py-2 text-sm hover:bg-slate-50"
+                  className="flex items-center justify-between rounded-none px-3 py-2 text-sm transition-colors duration-500 hover:bg-[var(--color-muted-bg)]/40"
                 >
                   <span>
                     <span className="font-medium">{p.description}</span>

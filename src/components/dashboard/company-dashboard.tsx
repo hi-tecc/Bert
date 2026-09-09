@@ -50,8 +50,8 @@ export async function CompanyDashboard({ companyId }: { companyId: string }) {
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="text-2xl font-semibold">{company.name}</h1>
-        <p className="text-sm text-slate-500">Company overview · {year}</p>
+        <h1 className="font-serif text-3xl tracking-tight md:text-4xl">{company.name}</h1>
+        <p className="mt-1.5 text-sm text-[var(--color-muted)]">Company overview · {year}</p>
       </div>
 
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
@@ -76,7 +76,7 @@ export async function CompanyDashboard({ companyId }: { companyId: string }) {
 
       <Card>
         <CardHeader className="flex items-center justify-between">
-          <CardTitle>Employee budgets</CardTitle>
+          <CardTitle emphasizeLast>Employee budgets</CardTitle>
           <BudgetStatusBadge level={summary.level} percent={summary.percent} />
         </CardHeader>
         <CardContent className="pt-3">

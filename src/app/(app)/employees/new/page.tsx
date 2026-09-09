@@ -24,7 +24,7 @@ export default async function NewEmployeePage({
 
   return (
     <div className="max-w-2xl">
-      <PageHeader title="New employee" subtitle="Add an employee to a company" />
+      <PageHeader title="New employee" subtitle="Add an employee to a company" emphasizeLast />
       <EmployeeForm
         action={createEmployeeAction}
         companies={companies}

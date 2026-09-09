@@ -7,7 +7,7 @@ export default async function NewCompanyPage() {
   await requireShopAdmin();
   return (
     <div className="max-w-2xl">
-      <PageHeader title="New company" subtitle="Add a customer company" />
+      <PageHeader title="New company" subtitle="Add a customer company" emphasizeLast />
       <CompanyForm action={createCompanyAction} submitLabel="Create company" />
     </div>
   );

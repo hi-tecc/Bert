@@ -12,7 +12,7 @@ import { ROLES, type Role } from "@/lib/constants";
 export interface NavItem {
   href: string;
   label: string;
-  icon: React.ComponentType<{ className?: string }>;
+  icon: React.ComponentType<{ className?: string; strokeWidth?: number | string }>;
   shopOnly?: boolean;
 }
 

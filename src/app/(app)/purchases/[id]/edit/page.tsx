@@ -30,7 +30,7 @@ export default async function EditPurchasePage({
 
   return (
     <div className="max-w-2xl">
-      <PageHeader title="Edit purchase" subtitle="Correct a purchase record" />
+      <PageHeader title="Edit purchase" subtitle="Correct a purchase record" emphasizeLast />
       <PurchaseForm
         action={action}
         employees={options}

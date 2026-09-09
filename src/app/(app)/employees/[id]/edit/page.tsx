@@ -33,6 +33,7 @@ export default async function EditEmployeePage({
       <PageHeader
         title="Edit employee"
         subtitle={`${employee.firstName} ${employee.lastName}`}
+        emphasizeLast
       />
       <EmployeeForm
         action={action}

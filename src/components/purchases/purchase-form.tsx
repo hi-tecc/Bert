@@ -39,7 +39,7 @@ export function PurchaseForm({
       <CardContent>
         <form action={formAction} className="space-y-4">
           {state.error && (
-            <p className="rounded-md bg-red-50 px-3 py-2 text-sm text-red-700">
+            <p className="border border-[var(--color-danger)]/30 px-3 py-2 text-sm text-[var(--color-danger)]">
               {state.error}
             </p>
           )}

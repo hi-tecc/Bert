@@ -13,10 +13,18 @@ export default function LoginPage() {
 
   return (
     <Card>
-      <CardContent>
-        <form action={action} className="space-y-4">
+      <CardContent className="p-8">
+        <div className="mb-8">
+          <h2 className="font-serif text-2xl tracking-tight">
+            Welcome <span className="italic text-[var(--color-accent)]">back</span>
+          </h2>
+          <p className="mt-1 text-sm text-[var(--color-muted)]">
+            Sign in to continue to your account.
+          </p>
+        </div>
+        <form action={action} className="space-y-6">
           {state.error && (
-            <p className="rounded-md bg-red-50 px-3 py-2 text-sm text-red-700">
+            <p className="animate-fade-in border border-[var(--color-danger)]/30 px-3 py-2 text-sm text-[var(--color-danger)]">
               {state.error}
             </p>
           )}
@@ -38,23 +46,26 @@ export default function LoginPage() {
               name="password"
               type="password"
               autoComplete="current-password"
+              placeholder="Enter your password"
               required
             />
           </div>
           <SubmitButton className="w-full">Sign in</SubmitButton>
         </form>
 
-        <div className="mt-4 text-center text-sm">
+        <div className="mt-6 text-center">
           <Link
             href="/forgot-password"
-            className="text-[var(--color-primary)] hover:underline"
+            className="text-xs uppercase tracking-[0.2em] text-[var(--color-muted)] transition-colors duration-500 hover:text-[var(--color-accent)]"
           >
             Forgot your password?
           </Link>
         </div>
 
-        <div className="mt-6 rounded-md bg-slate-50 p-3 text-xs text-slate-500">
-          <p className="font-medium text-slate-600">Demo accounts</p>
+        <div className="mt-8 border-t border-[var(--color-border)] pt-5 text-xs text-[var(--color-muted)]">
+          <p className="mb-1 text-[10px] uppercase tracking-[0.2em] text-[var(--color-foreground)]">
+            Demo accounts
+          </p>
           <p>Shop admin: admin@shop.test / admin123</p>
           <p>Company admin: acme@company.test / company123</p>
         </div>

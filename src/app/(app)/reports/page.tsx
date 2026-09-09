@@ -87,7 +87,7 @@ export default async function ReportsPage({
             <CardTitle>{report.title}</CardTitle>
             <p className="text-sm text-slate-500">
               {report.rangeLabel} · {report.count} purchases ·{" "}
-              <span className="font-medium text-slate-700">
+              <span className="font-medium text-[var(--color-foreground)]">
                 {formatMoney(report.total)}
               </span>
             </p>
@@ -95,19 +95,19 @@ export default async function ReportsPage({
           <div className="flex flex-wrap gap-2">
             <a
               href={exportUrl("csv")}
-              className="inline-flex h-9 items-center gap-2 rounded-lg border border-[var(--color-border)] bg-white px-3 text-sm font-medium hover:bg-slate-50"
+              className="inline-flex h-9 items-center gap-2 rounded-none border border-[var(--color-foreground)] bg-transparent px-5 text-[11px] font-medium uppercase tracking-[0.2em] transition-colors duration-500 hover:bg-[var(--color-foreground)] hover:text-[var(--color-primary-foreground)]"
             >
               <FileText className="h-4 w-4" /> CSV
             </a>
             <a
               href={exportUrl("xlsx")}
-              className="inline-flex h-9 items-center gap-2 rounded-lg border border-[var(--color-border)] bg-white px-3 text-sm font-medium hover:bg-slate-50"
+              className="inline-flex h-9 items-center gap-2 rounded-none border border-[var(--color-foreground)] bg-transparent px-5 text-[11px] font-medium uppercase tracking-[0.2em] transition-colors duration-500 hover:bg-[var(--color-foreground)] hover:text-[var(--color-primary-foreground)]"
             >
               <FileSpreadsheet className="h-4 w-4" /> Excel
             </a>
             <a
               href={exportUrl("pdf")}
-              className="inline-flex h-9 items-center gap-2 rounded-lg border border-[var(--color-border)] bg-white px-3 text-sm font-medium hover:bg-slate-50"
+              className="inline-flex h-9 items-center gap-2 rounded-none border border-[var(--color-foreground)] bg-transparent px-5 text-[11px] font-medium uppercase tracking-[0.2em] transition-colors duration-500 hover:bg-[var(--color-foreground)] hover:text-[var(--color-primary-foreground)]"
             >
               <FileDown className="h-4 w-4" /> PDF
             </a>

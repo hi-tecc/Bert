@@ -13,7 +13,7 @@ export default async function NewUserPage() {
 
   return (
     <div className="max-w-2xl">
-      <PageHeader title="New user" subtitle="Add an admin or customer login" />
+      <PageHeader title="New user" subtitle="Add an admin or customer login" emphasizeLast />
       <UserForm
         action={createUserAction}
         companies={companies}

@@ -57,8 +57,8 @@ export async function ShopDashboard() {
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="text-2xl font-semibold">Dashboard</h1>
-        <p className="text-sm text-slate-500">Overview across all companies</p>
+        <h1 className="font-serif text-3xl tracking-tight md:text-4xl">Dashboard</h1>
+        <p className="mt-1.5 text-sm text-[var(--color-muted)]">Overview across all companies</p>
       </div>
 
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
@@ -80,7 +80,11 @@ export async function ShopDashboard() {
       <div className="grid gap-6 lg:grid-cols-3">
         <Card className="lg:col-span-2">
           <CardHeader>
-            <CardTitle>Budget vs. spending by company</CardTitle>
+            <CardTitle>
+              Budget vs.{" "}
+              <span className="italic text-[var(--color-accent)]">spending</span> by
+              company
+            </CardTitle>
           </CardHeader>
           <CardContent>
             {chartData.length ? (
@@ -95,7 +99,7 @@ export async function ShopDashboard() {
 
         <Card>
           <CardHeader>
-            <CardTitle>Companies nearing budget</CardTitle>
+            <CardTitle emphasizeLast>Companies nearing budget</CardTitle>
           </CardHeader>
           <CardContent className="space-y-4">
             {nearing.length === 0 ? (
@@ -107,7 +111,7 @@ export async function ShopDashboard() {
                 <Link
                   key={s.companyId}
                   href={`/companies/${s.companyId}`}
-                  className="block rounded-lg border border-[var(--color-border)] p-3 hover:bg-slate-50"
+                  className="block rounded-none border border-[var(--color-border)] p-3 transition-colors duration-500 hover:bg-[var(--color-muted-bg)]/40"
                 >
                   <div className="mb-1.5 flex items-center justify-between">
                     <span className="text-sm font-medium">{s.companyName}</span>
