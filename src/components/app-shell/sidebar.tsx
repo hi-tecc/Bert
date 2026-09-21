@@ -28,8 +28,9 @@ export function Sidebar({ role }: { role: Role }) {
             <Link
               key={item.href}
               href={item.href}
+              aria-current={active ? "page" : undefined}
               className={cn(
-                "flex items-center gap-3 rounded-none border-l-2 px-3 py-2.5 text-xs font-medium uppercase tracking-[0.15em] transition-colors duration-500",
+                "flex min-h-11 items-center gap-3 rounded-none border-l-2 px-3 py-2.5 text-xs font-medium uppercase tracking-[0.12em] transition-colors duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-accent)]",
                 active
                   ? "border-[var(--color-accent)] bg-[var(--color-muted-bg)] text-[var(--color-foreground)]"
                   : "border-transparent text-[var(--color-muted)] hover:border-[var(--color-border)] hover:text-[var(--color-foreground)]",

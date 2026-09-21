@@ -18,7 +18,13 @@ export interface ChartDatum {
 }
 
 export function SpendingChart({ data }: { data: ChartDatum[] }) {
-  const { t } = useI18n();
+  const { locale, t } = useI18n();
+  const currency = new Intl.NumberFormat(locale === "nl" ? "nl-NL" : "en-IE", {
+    style: "currency",
+    currency: "EUR",
+  });
+  const formatCurrency = (value: number) => currency.format(value / 100);
+
   return (
     <div className="w-full">
       <div className="mb-4 flex items-center gap-5 text-[10px] uppercase tracking-[0.2em] text-[var(--color-muted)]">
@@ -29,7 +35,7 @@ export function SpendingChart({ data }: { data: ChartDatum[] }) {
           <span className="h-2.5 w-2.5 bg-[#1a1a1a]" /> {t.dashboard.chartSpent}
         </span>
       </div>
-      <div className="h-72 w-full">
+      <div className="h-72 w-full" aria-hidden="true">
         <ResponsiveContainer width="100%" height="100%">
           <BarChart data={data} margin={{ top: 8, right: 8, left: 8, bottom: 8 }}>
             <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#1a1a1a14" />
@@ -43,11 +49,11 @@ export function SpendingChart({ data }: { data: ChartDatum[] }) {
               tick={{ fontSize: 12, fill: "#6c6863" }}
               tickLine={false}
               axisLine={false}
-              tickFormatter={(v) => `€${(v / 100).toLocaleString()}`}
+              tickFormatter={(value) => formatCurrency(Number(value))}
             />
             <Tooltip
               cursor={{ fill: "rgba(212,175,55,0.08)" }}
-              formatter={(value) => `€${(Number(value) / 100).toLocaleString()}`}
+              formatter={(value) => formatCurrency(Number(value))}
               contentStyle={{
                 borderRadius: 0,
                 border: "1px solid #1a1a1a1f",
@@ -61,6 +67,25 @@ export function SpendingChart({ data }: { data: ChartDatum[] }) {
           </BarChart>
         </ResponsiveContainer>
       </div>
+      <table className="sr-only">
+        <caption>{t.dashboard.chartAccessibleCaption}</caption>
+        <thead>
+          <tr>
+            <th scope="col">{t.common.company}</th>
+            <th scope="col">{t.dashboard.chartBudget}</th>
+            <th scope="col">{t.dashboard.chartSpent}</th>
+          </tr>
+        </thead>
+        <tbody>
+          {data.map((item) => (
+            <tr key={item.name}>
+              <th scope="row">{item.name}</th>
+              <td>{formatCurrency(item.Budget)}</td>
+              <td>{formatCurrency(item.Spent)}</td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
     </div>
   );
 }

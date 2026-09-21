@@ -3,6 +3,10 @@ import { notFound } from "next/navigation";
 import { prisma } from "@/lib/prisma";
 import { formatMoney } from "@/lib/money";
 import { budgetStatus, currentYear, yearRange } from "@/lib/budget";
+import {
+  BUDGET_CRITICAL_THRESHOLD,
+  BUDGET_WARN_THRESHOLD,
+} from "@/lib/constants";
 import { getEmployeesWithBudget } from "@/lib/queries";
 import { StatCard } from "@/components/stat-card";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -83,6 +87,12 @@ export async function CompanyDashboard({ companyId }: { companyId: string }) {
           <BudgetStatusBadge level={summary.level} percent={summary.percent} />
         </CardHeader>
         <CardContent className="pt-3">
+          <p className="mb-4 text-xs text-[var(--color-muted)]">
+            {interpolate(t.dashboard.budgetThresholds, {
+              warning: BUDGET_WARN_THRESHOLD,
+              critical: BUDGET_CRITICAL_THRESHOLD,
+            })}
+          </p>
           {employees.length === 0 ? (
             <p className="py-6 text-center text-sm text-slate-400">
               {t.dashboard.noEmployeesYet}
@@ -112,13 +122,19 @@ export async function CompanyDashboard({ companyId }: { companyId: string }) {
                           {formatMoney(e.status.remaining)}
                         </TD>
                         <TD>
-                          <div className="flex items-center gap-2">
-                            <BudgetBar
-                              percent={e.status.percent}
-                              level={e.status.level}
-                            />
-                            <span className="w-12 text-right text-xs text-slate-500">
-                              {e.status.percent}%
+                          <div className="space-y-1">
+                            <div className="flex items-center gap-2">
+                              <BudgetBar
+                                percent={e.status.percent}
+                                level={e.status.level}
+                                label={`${t.budgetLevels[e.status.level]}: ${e.status.percent}%`}
+                              />
+                              <span className="w-12 text-right text-xs text-slate-500">
+                                {e.status.percent}%
+                              </span>
+                            </div>
+                            <span className="block text-xs text-[var(--color-muted)]">
+                              {t.budgetLevels[e.status.level]}
                             </span>
                           </div>
                         </TD>
@@ -143,13 +159,19 @@ export async function CompanyDashboard({ companyId }: { companyId: string }) {
                     <MobileCardRow label={t.common.remaining}>
                       {formatMoney(e.status.remaining)}
                     </MobileCardRow>
-                    <div className="mt-2 flex items-center gap-2">
-                      <BudgetBar
-                        percent={e.status.percent}
-                        level={e.status.level}
-                      />
-                      <span className="w-12 text-right text-xs text-slate-500">
-                        {e.status.percent}%
+                    <div className="mt-2 space-y-1">
+                      <div className="flex items-center gap-2">
+                        <BudgetBar
+                          percent={e.status.percent}
+                          level={e.status.level}
+                          label={`${t.budgetLevels[e.status.level]}: ${e.status.percent}%`}
+                        />
+                        <span className="w-12 text-right text-xs text-slate-500">
+                          {e.status.percent}%
+                        </span>
+                      </div>
+                      <span className="block text-xs text-[var(--color-muted)]">
+                        {t.budgetLevels[e.status.level]}
                       </span>
                     </div>
                   </MobileCard>

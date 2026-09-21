@@ -15,6 +15,10 @@ import {
 import { SpendingChart } from "@/components/dashboard/spending-chart";
 import { getT } from "@/lib/i18n/server";
 import { interpolate } from "@/lib/i18n/config";
+import {
+  BUDGET_CRITICAL_THRESHOLD,
+  BUDGET_WARN_THRESHOLD,
+} from "@/lib/constants";
 
 export async function ShopDashboard() {
   const t = await getT();
@@ -88,6 +92,9 @@ export async function ShopDashboard() {
               <span className="italic text-[var(--color-accent)]">{t.dashboard.chartTitleAccent}</span>
               {t.dashboard.chartTitleSuffix}
             </CardTitle>
+            <p className="text-xs text-[var(--color-muted)]">
+              {interpolate(t.dashboard.calendarYear, { year })}
+            </p>
           </CardHeader>
           <CardContent>
             {chartData.length ? (
@@ -103,6 +110,12 @@ export async function ShopDashboard() {
         <Card>
           <CardHeader>
             <CardTitle emphasizeLast>{t.dashboard.nearingTitle}</CardTitle>
+            <p className="text-xs text-[var(--color-muted)]">
+              {interpolate(t.dashboard.budgetThresholds, {
+                warning: BUDGET_WARN_THRESHOLD,
+                critical: BUDGET_CRITICAL_THRESHOLD,
+              })}
+            </p>
           </CardHeader>
           <CardContent className="space-y-4">
             {nearing.length === 0 ? (
@@ -114,7 +127,7 @@ export async function ShopDashboard() {
                 <Link
                   key={s.companyId}
                   href={`/companies/${s.companyId}`}
-                  className="block rounded-none border border-[var(--color-border)] p-3 transition-colors duration-500 hover:bg-[var(--color-muted-bg)]/40"
+                  className="block rounded-none border border-[var(--color-border)] p-3 transition-colors duration-200 hover:bg-[var(--color-muted-bg)]/40 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-accent)]"
                 >
                   <div className="mb-1.5 flex items-center justify-between">
                     <span className="text-sm font-medium">{s.companyName}</span>
@@ -126,6 +139,11 @@ export async function ShopDashboard() {
                   <BudgetBar percent={s.status.percent} level={s.status.level} />
                   <p className="mt-1.5 text-xs text-slate-500">
                     {formatMoney(s.totalSpent)} {t.common.of} {formatMoney(s.totalBudget)}
+                  </p>
+                  <p className="mt-1 text-xs text-[var(--color-muted)]">
+                    {interpolate(t.dashboard.remainingAmount, {
+                      amount: formatMoney(s.status.remaining),
+                    })}
                   </p>
                 </Link>
               ))

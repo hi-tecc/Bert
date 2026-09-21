@@ -36,7 +36,7 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
     <button
       ref={ref}
       className={cn(
-        "group relative inline-flex items-center justify-center gap-2 overflow-hidden rounded-none font-medium uppercase tracking-[0.2em] transition-all duration-500 ease-[cubic-bezier(0.25,0.46,0.45,0.94)] disabled:pointer-events-none disabled:opacity-50 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-[var(--color-foreground)]",
+        "group relative inline-flex items-center justify-center gap-2 overflow-hidden rounded-none font-medium uppercase tracking-[0.12em] transition-[background-color,border-color,color,box-shadow] duration-200 ease-out disabled:pointer-events-none disabled:opacity-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-accent)] focus-visible:ring-offset-2",
         variants[variant],
         sizes[size],
         className,
@@ -47,7 +47,7 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
         // Gold layer slides in from the left on hover — the signature reward.
         <span
           aria-hidden
-          className="absolute inset-0 -translate-x-full bg-[var(--color-accent)] transition-transform duration-500 ease-[cubic-bezier(0.25,0.46,0.45,0.94)] group-hover:translate-x-0"
+          className="absolute inset-0 -translate-x-full bg-[var(--color-accent)] transition-transform duration-200 ease-out group-hover:translate-x-0"
         />
       )}
       <span className="relative z-10 inline-flex items-center justify-center gap-2">

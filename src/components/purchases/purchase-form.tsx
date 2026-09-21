@@ -9,6 +9,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
 import { SubmitButton } from "@/components/ui/submit-button";
 import { Field } from "@/components/field";
+import { FormError, useFocusFirstError } from "@/components/form-error";
 import type { FormState } from "@/lib/actions/form-state";
 import { useI18n } from "@/lib/i18n/context";
 
@@ -46,6 +47,7 @@ export function PurchaseForm({
     () => employees.filter((e) => e.companyId === companyId),
     [employees, companyId],
   );
+  useFocusFirstError(fe);
 
   function handleCompanyChange(value: string) {
     setCompanyId(value);
@@ -59,11 +61,7 @@ export function PurchaseForm({
     <Card>
       <CardContent>
         <form action={formAction} className="space-y-4">
-          {state.error && (
-            <p className="border border-[var(--color-danger)]/30 px-3 py-2 text-sm text-[var(--color-danger)]">
-              {state.error}
-            </p>
-          )}
+          <FormError message={state.error} />
 
           <Field label={t.common.company} htmlFor="companyId" error={fe.companyId}>
             <Combobox

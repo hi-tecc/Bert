@@ -99,6 +99,54 @@ h4 {
   }
 }
 
+@media (max-width: 767px) {
+  .responsive-audit-table {
+    display: block;
+  }
+
+  .responsive-audit-table thead {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip: rect(0 0 0 0);
+    clip-path: inset(50%);
+    white-space: nowrap;
+  }
+
+  .responsive-audit-table tbody {
+    display: grid;
+    gap: 0.75rem;
+  }
+
+  .responsive-audit-table tr {
+    display: block;
+    border: 1px solid var(--color-border);
+    background: var(--color-surface);
+    padding: 0.75rem 1rem;
+  }
+
+  .responsive-audit-table td {
+    display: flex;
+    min-width: 0;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 1rem;
+    padding: 0.35rem 0;
+    text-align: right;
+  }
+
+  .responsive-audit-table td::before {
+    content: attr(data-label);
+    flex-shrink: 0;
+    color: var(--color-muted);
+    font-size: 0.625rem;
+    font-weight: 500;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+  }
+}
+
 /* Respect users who prefer reduced motion — keep colour, drop movement. */
 @media (prefers-reduced-motion: reduce) {
   *,

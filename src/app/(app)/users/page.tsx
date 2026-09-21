@@ -105,7 +105,7 @@ export default async function UsersPage({
                           <div className="flex justify-end gap-2">
                             <Link
                               href={`/users/${u.id}/edit`}
-                              className="inline-flex h-9 items-center rounded-none border border-[var(--color-foreground)] bg-transparent px-5 text-[11px] font-medium uppercase tracking-[0.2em] transition-colors duration-500 hover:bg-[var(--color-foreground)] hover:text-[var(--color-primary-foreground)]"
+                              className="inline-flex h-11 items-center rounded-none border border-[var(--color-foreground)] bg-transparent px-5 text-[11px] font-medium uppercase tracking-[0.12em] transition-colors duration-200 hover:bg-[var(--color-foreground)] hover:text-[var(--color-primary-foreground)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-accent)]"
                             >
                               {t.common.edit}
                             </Link>
@@ -143,7 +143,7 @@ export default async function UsersPage({
                     <div className="mt-3 flex gap-2">
                       <Link
                         href={`/users/${u.id}/edit`}
-                        className="inline-flex h-9 flex-1 items-center justify-center rounded-none border border-[var(--color-foreground)] bg-transparent px-5 text-[11px] font-medium uppercase tracking-[0.2em] transition-colors duration-500 hover:bg-[var(--color-foreground)] hover:text-[var(--color-primary-foreground)]"
+                        className="inline-flex h-11 flex-1 items-center justify-center rounded-none border border-[var(--color-foreground)] bg-transparent px-5 text-[11px] font-medium uppercase tracking-[0.12em] transition-colors duration-200 hover:bg-[var(--color-foreground)] hover:text-[var(--color-primary-foreground)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-accent)]"
                       >
                         {t.common.edit}
                       </Link>

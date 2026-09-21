@@ -1,3 +1,4 @@
+import { cloneElement, isValidElement, type ReactElement, type ReactNode } from "react";
 import { Label } from "@/components/ui/label";
 
 export function Field({
@@ -9,13 +10,29 @@ export function Field({
   label: string;
   htmlFor?: string;
   error?: string;
-  children: React.ReactNode;
+  children: ReactNode;
 }) {
+  const errorId = error && htmlFor ? `${htmlFor}-error` : undefined;
+  const control = isValidElement(children)
+    ? cloneElement(children as ReactElement<Record<string, unknown>>, {
+        "aria-describedby": errorId,
+        "aria-invalid": error ? true : undefined,
+      })
+    : children;
+
   return (
     <div>
       <Label htmlFor={htmlFor}>{label}</Label>
-      {children}
-      {error && <p className="mt-1 text-xs text-[var(--color-danger)]">{error}</p>}
+      {control}
+      {error && (
+        <p
+          id={errorId}
+          aria-live="polite"
+          className="mt-1 text-xs text-[var(--color-danger)]"
+        >
+          {error}
+        </p>
+      )}
     </div>
   );
 }
