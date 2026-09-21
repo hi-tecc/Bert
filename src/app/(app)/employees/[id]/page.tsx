@@ -57,14 +57,14 @@ export default async function EmployeeDetailPage({
             {shopAdmin && (
               <Link
                 href={`/purchases/new?employeeId=${id}`}
-                className="inline-flex h-9 items-center gap-2 rounded-none bg-[var(--color-foreground)] px-5 text-[11px] font-medium uppercase tracking-[0.2em] text-[var(--color-primary-foreground)] transition-colors duration-500 hover:bg-[var(--color-accent)]"
+                className="inline-flex h-11 items-center gap-2 rounded-none bg-[var(--color-foreground)] px-5 text-[11px] font-medium uppercase tracking-[0.12em] text-[var(--color-primary-foreground)] transition-colors duration-200 hover:bg-[var(--color-accent)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-accent)]"
               >
                 <Plus className="h-4 w-4" /> {t.employees.addPurchase}
               </Link>
             )}
             <Link
               href={`/employees/${id}/edit`}
-              className="inline-flex h-9 items-center gap-2 rounded-none border border-[var(--color-foreground)] bg-transparent px-5 text-[11px] font-medium uppercase tracking-[0.2em] transition-colors duration-500 hover:bg-[var(--color-foreground)] hover:text-[var(--color-primary-foreground)]"
+              className="inline-flex h-11 items-center gap-2 rounded-none border border-[var(--color-foreground)] bg-transparent px-5 text-[11px] font-medium uppercase tracking-[0.12em] transition-colors duration-200 hover:bg-[var(--color-foreground)] hover:text-[var(--color-primary-foreground)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-accent)]"
             >
               <Pencil className="h-4 w-4" /> {t.common.edit}
             </Link>
