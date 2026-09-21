@@ -7,6 +7,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { SubmitButton } from "@/components/ui/submit-button";
+import { FormError } from "@/components/form-error";
 import { useI18n } from "@/lib/i18n/context";
 
 export function ResetPasswordForm({ token }: { token: string }) {
@@ -22,13 +23,13 @@ export function ResetPasswordForm({ token }: { token: string }) {
         <h2 className="mb-4 text-lg font-semibold">{t.auth.resetTitle}</h2>
         <form action={action} className="space-y-4">
           <input type="hidden" name="token" value={token} />
-          {state.error && (
-            <p className="border border-[var(--color-danger)]/30 px-3 py-2 text-sm text-[var(--color-danger)]">
-              {state.error}
-            </p>
-          )}
+          <FormError message={state.error} />
           {state.success && (
-            <p className="border border-[var(--color-success)]/30 px-3 py-2 text-sm text-[var(--color-success)]">
+            <p
+              role="status"
+              aria-live="polite"
+              className="border border-[var(--color-success)]/30 px-3 py-2 text-sm text-[var(--color-success)]"
+            >
               {state.success}
             </p>
           )}

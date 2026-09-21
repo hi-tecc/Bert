@@ -13,16 +13,26 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Table, TBody, TD, TH, THead, TR } from "@/components/ui/table";
 import { MobileCards, MobileCard, MobileCardRow } from "@/components/ui/mobile-card";
 import { getT } from "@/lib/i18n/server";
+import { interpolate } from "@/lib/i18n/config";
+
+const PAGE_SIZE = 50;
 
 export default async function PurchasesPage({
   searchParams,
 }: {
-  searchParams: Promise<{ q?: string }>;
+  searchParams: Promise<{ q?: string; page?: string; sort?: string }>;
 }) {
   const user = await requireUser();
   const t = await getT();
-  const { q } = await searchParams;
+  const { q, page: requestedPage, sort: requestedSort } = await searchParams;
   const shopAdmin = isShopAdmin(user);
+  const sort = ["date-desc", "date-asc", "amount-desc", "amount-asc"].includes(
+    requestedSort ?? "",
+  )
+    ? requestedSort!
+    : "date-desc";
+  const parsedPage = Number.parseInt(requestedPage ?? "1", 10);
+  const page = Number.isFinite(parsedPage) && parsedPage > 0 ? parsedPage : 1;
 
   const where: Prisma.PurchaseWhereInput = {
     ...(shopAdmin
@@ -39,12 +49,35 @@ export default async function PurchasesPage({
       : {}),
   };
 
+  const orderBy: Prisma.PurchaseOrderByWithRelationInput =
+    sort === "date-asc"
+      ? { date: "asc" }
+      : sort === "amount-desc"
+        ? { amount: "desc" }
+        : sort === "amount-asc"
+          ? { amount: "asc" }
+          : { date: "desc" };
+  const totalCount = await prisma.purchase.count({ where });
+  const totalPages = Math.max(1, Math.ceil(totalCount / PAGE_SIZE));
+  const currentPage = Math.min(page, totalPages);
   const purchases = await prisma.purchase.findMany({
     where,
     include: { employee: { include: { company: { select: { name: true } } } } },
-    orderBy: { date: "desc" },
-    take: 200,
+    orderBy,
+    skip: (currentPage - 1) * PAGE_SIZE,
+    take: PAGE_SIZE,
   });
+  const firstResult = totalCount === 0 ? 0 : (currentPage - 1) * PAGE_SIZE + 1;
+  const lastResult = Math.min(currentPage * PAGE_SIZE, totalCount);
+
+  function pageHref(targetPage: number) {
+    const params = new URLSearchParams();
+    if (q) params.set("q", q);
+    if (sort !== "date-desc") params.set("sort", sort);
+    if (targetPage > 1) params.set("page", String(targetPage));
+    const query = params.toString();
+    return query ? `/purchases?${query}` : "/purchases";
+  }
 
   return (
     <div>
@@ -66,7 +99,21 @@ export default async function PurchasesPage({
       <ListToolbar
         placeholder={t.purchases.searchPlaceholder}
         withStatusFilter={false}
+        sortOptions={[
+          { value: "date-desc", label: t.purchases.sortNewest },
+          { value: "date-asc", label: t.purchases.sortOldest },
+          { value: "amount-desc", label: t.purchases.sortHighest },
+          { value: "amount-asc", label: t.purchases.sortLowest },
+        ]}
       />
+
+      <p className="mb-3 text-sm text-[var(--color-muted)]" aria-live="polite">
+        {interpolate(t.purchases.resultsSummary, {
+          from: firstResult,
+          to: lastResult,
+          count: totalCount,
+        })}
+      </p>
 
       <Card>
         <CardContent className="p-0">
@@ -175,6 +222,39 @@ export default async function PurchasesPage({
           )}
         </CardContent>
       </Card>
+      {totalPages > 1 && (
+        <nav
+          aria-label={t.purchases.pagination}
+          className="mt-4 flex items-center justify-between gap-4"
+        >
+          {currentPage > 1 ? (
+            <Link
+              href={pageHref(currentPage - 1)}
+              className="inline-flex min-h-11 items-center border border-[var(--color-border)] px-4 text-sm transition-colors duration-200 hover:border-[var(--color-foreground)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-accent)]"
+            >
+              {t.purchases.previousPage}
+            </Link>
+          ) : (
+            <span />
+          )}
+          <span className="text-sm text-[var(--color-muted)]">
+            {interpolate(t.purchases.pageSummary, {
+              page: currentPage,
+              pages: totalPages,
+            })}
+          </span>
+          {currentPage < totalPages ? (
+            <Link
+              href={pageHref(currentPage + 1)}
+              className="inline-flex min-h-11 items-center border border-[var(--color-border)] px-4 text-sm transition-colors duration-200 hover:border-[var(--color-foreground)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-accent)]"
+            >
+              {t.purchases.nextPage}
+            </Link>
+          ) : (
+            <span />
+          )}
+        </nav>
+      )}
     </div>
   );
 }

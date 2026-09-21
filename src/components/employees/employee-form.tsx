@@ -8,6 +8,7 @@ import { Select } from "@/components/ui/select";
 import { Button } from "@/components/ui/button";
 import { SubmitButton } from "@/components/ui/submit-button";
 import { Field } from "@/components/field";
+import { FormError, useFocusFirstError } from "@/components/form-error";
 import type { FormState } from "@/lib/actions/form-state";
 import { useI18n } from "@/lib/i18n/context";
 
@@ -37,16 +38,13 @@ export function EmployeeForm({
   const [state, formAction] = useActionState<FormState, FormData>(action, {});
   const fe = state.fieldErrors ?? {};
   const { t } = useI18n();
+  useFocusFirstError(fe);
 
   return (
     <Card>
       <CardContent>
         <form action={formAction} className="space-y-4">
-          {state.error && (
-            <p className="border border-[var(--color-danger)]/30 px-3 py-2 text-sm text-[var(--color-danger)]">
-              {state.error}
-            </p>
-          )}
+          <FormError message={state.error} />
 
           {lockedCompanyId ? (
             <input type="hidden" name="companyId" value={lockedCompanyId} />

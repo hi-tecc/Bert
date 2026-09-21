@@ -19,6 +19,8 @@ export function Combobox({
   required,
   disabled,
   className,
+  "aria-describedby": ariaDescribedBy,
+  "aria-invalid": ariaInvalid,
 }: {
   id?: string;
   name?: string;
@@ -30,7 +32,11 @@ export function Combobox({
   required?: boolean;
   disabled?: boolean;
   className?: string;
+  "aria-describedby"?: string;
+  "aria-invalid"?: boolean;
 }) {
+  const generatedId = React.useId();
+  const listboxId = `${id ?? generatedId}-listbox`;
   const containerRef = React.useRef<HTMLDivElement>(null);
   const inputRef = React.useRef<HTMLInputElement>(null);
   const [open, setOpen] = React.useState(false);
@@ -38,14 +44,6 @@ export function Combobox({
   const [highlighted, setHighlighted] = React.useState(0);
 
   const selected = options.find((o) => o.id === value);
-
-  // Keep the visible text in sync with the selected option when not actively editing.
-  React.useEffect(() => {
-    if (!open) {
-      setQuery(selected ? selected.label : "");
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [value, open]);
 
   React.useEffect(() => {
     function handleClickOutside(e: MouseEvent) {
@@ -64,6 +62,8 @@ export function Combobox({
     if (!q || query === selected?.label) return options;
     return options.filter((o) => o.label.toLowerCase().includes(q));
   }, [options, query, selected]);
+  const safeHighlighted = Math.min(highlighted, Math.max(0, filtered.length - 1));
+  const activeOption = filtered[safeHighlighted];
 
   function selectOption(option: ComboboxOption) {
     onChange(option.id);
@@ -73,22 +73,32 @@ export function Combobox({
 
   function handleKeyDown(e: React.KeyboardEvent<HTMLInputElement>) {
     if (!open && (e.key === "ArrowDown" || e.key === "Enter")) {
+      e.preventDefault();
+      setQuery(selected?.label ?? "");
       setOpen(true);
       return;
     }
     if (e.key === "ArrowDown") {
       e.preventDefault();
-      setHighlighted((h) => Math.min(h + 1, filtered.length - 1));
+      setHighlighted(Math.min(safeHighlighted + 1, filtered.length - 1));
     } else if (e.key === "ArrowUp") {
       e.preventDefault();
-      setHighlighted((h) => Math.max(h - 1, 0));
+      setHighlighted(Math.max(safeHighlighted - 1, 0));
+    } else if (e.key === "Home") {
+      e.preventDefault();
+      setHighlighted(0);
+    } else if (e.key === "End") {
+      e.preventDefault();
+      setHighlighted(Math.max(0, filtered.length - 1));
     } else if (e.key === "Enter") {
       e.preventDefault();
-      const option = filtered[highlighted];
+      const option = filtered[safeHighlighted];
       if (option) selectOption(option);
     } else if (e.key === "Escape") {
       setOpen(false);
       setQuery(selected ? selected.label : "");
+    } else if (e.key === "Tab") {
+      setOpen(false);
     }
   }
 
@@ -102,43 +112,60 @@ export function Combobox({
         role="combobox"
         aria-expanded={open}
         aria-autocomplete="list"
+        aria-controls={listboxId}
+        aria-activedescendant={
+          open && activeOption ? `${listboxId}-${activeOption.id}` : undefined
+        }
+        aria-describedby={ariaDescribedBy}
+        aria-invalid={ariaInvalid}
+        aria-required={required}
         autoComplete="off"
         disabled={disabled}
         placeholder={placeholder}
         className={cn(
-          "h-11 w-full rounded-none border-0 border-b border-[var(--color-foreground)]/30 bg-transparent px-0 text-sm text-[var(--color-foreground)] outline-none transition-colors duration-500 placeholder:font-serif placeholder:italic placeholder:text-[var(--color-muted)] focus-visible:border-[var(--color-accent)] disabled:opacity-50",
+          "h-11 w-full rounded-none border-0 border-b border-[var(--color-foreground)]/30 bg-transparent px-0 text-sm text-[var(--color-foreground)] outline-none transition-colors duration-200 placeholder:font-serif placeholder:italic placeholder:text-[var(--color-muted)] focus-visible:border-[var(--color-accent)] focus-visible:ring-1 focus-visible:ring-[var(--color-accent)] disabled:opacity-50",
           className,
         )}
-        value={query}
+        value={open ? query : selected?.label ?? ""}
         onChange={(e) => {
           setQuery(e.target.value);
           setHighlighted(0);
           if (!open) setOpen(true);
           if (e.target.value === "") onChange("");
         }}
-        onFocus={() => setOpen(true)}
+        onFocus={() => {
+          setQuery(selected?.label ?? "");
+          setOpen(true);
+        }}
         onKeyDown={handleKeyDown}
       />
       {open && (
-        <ul className="absolute z-10 mt-1 max-h-60 w-full overflow-auto border border-[var(--color-foreground)]/20 bg-[var(--color-background)] text-sm shadow-md">
+        <ul
+          id={listboxId}
+          role="listbox"
+          className="absolute z-10 mt-1 max-h-60 w-full overflow-auto overscroll-contain border border-[var(--color-foreground)]/20 bg-[var(--color-background)] text-sm shadow-md"
+        >
           {filtered.length === 0 && (
-            <li className="px-3 py-2 text-[var(--color-muted)]">{emptyMessage}</li>
+            <li role="presentation" className="px-3 py-2 text-[var(--color-muted)]">
+              {emptyMessage}
+            </li>
           )}
           {filtered.map((option, index) => (
-            <li key={option.id}>
-              <button
-                type="button"
-                className={cn(
-                  "block w-full px-3 py-2 text-left hover:bg-[var(--color-foreground)]/5",
-                  index === highlighted && "bg-[var(--color-foreground)]/5",
-                  option.id === value && "font-medium",
-                )}
-                onMouseEnter={() => setHighlighted(index)}
-                onMouseDown={(e) => e.preventDefault()}
-                onClick={() => selectOption(option)}
-              >
-                {option.label}
-              </button>
+            <li
+              id={`${listboxId}-${option.id}`}
+              key={option.id}
+              role="option"
+              aria-selected={option.id === value}
+              className={cn(
+                "min-h-11 cursor-pointer px-3 py-2.5 hover:bg-[var(--color-foreground)]/5",
+                index === safeHighlighted && "bg-[var(--color-foreground)]/5",
+                option.id === value && "font-medium",
+              )}
+              onMouseEnter={() => setHighlighted(index)}
+              onMouseDown={(e) => e.preventDefault()}
+              onClick={() => selectOption(option)}
+            >
+              {option.label}
             </li>
           ))}
         </ul>

@@ -36,10 +36,14 @@ export function Topbar({
         <form onSubmit={onSearch} className="relative hidden w-full max-w-md md:block">
           <Search className="pointer-events-none absolute left-0 top-1/2 h-4 w-4 -translate-y-1/2 text-[var(--color-muted)]" strokeWidth={1.5} />
           <input
+            name="q"
+            type="search"
+            autoComplete="off"
+            aria-label={t.topbar.search}
             value={query}
             onChange={(e) => setQuery(e.target.value)}
             placeholder={t.topbar.searchPlaceholder}
-            className="h-11 w-full rounded-none border-0 border-b border-[var(--color-foreground)]/30 bg-transparent pl-7 pr-4 text-sm outline-none transition-colors duration-500 placeholder:font-serif placeholder:italic placeholder:text-[var(--color-muted)] focus-visible:border-[var(--color-accent)]"
+            className="h-11 w-full rounded-none border-0 border-b border-[var(--color-foreground)]/30 bg-transparent pl-7 pr-4 text-sm outline-none transition-colors duration-200 placeholder:font-serif placeholder:italic placeholder:text-[var(--color-muted)] focus-visible:border-[var(--color-accent)] focus-visible:ring-1 focus-visible:ring-[var(--color-accent)]"
           />
         </form>
       </div>
@@ -48,7 +52,7 @@ export function Topbar({
         <Link
           href="/search"
           aria-label={t.topbar.search}
-          className="flex h-9 w-9 items-center justify-center rounded-none text-[var(--color-muted)] transition-colors duration-500 hover:bg-[var(--color-muted-bg)] hover:text-[var(--color-foreground)] md:hidden"
+          className="flex h-11 w-11 items-center justify-center rounded-none text-[var(--color-muted)] transition-colors duration-200 hover:bg-[var(--color-muted-bg)] hover:text-[var(--color-foreground)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-accent)] md:hidden"
         >
           <Search className="h-4 w-4" strokeWidth={1.5} />
         </Link>
@@ -61,7 +65,8 @@ export function Topbar({
           <button
             type="submit"
             title={t.topbar.signOut}
-            className="flex h-9 w-9 items-center justify-center rounded-none text-[var(--color-muted)] transition-colors duration-500 hover:bg-[var(--color-muted-bg)] hover:text-[var(--color-foreground)]"
+            aria-label={t.topbar.signOut}
+            className="flex h-11 w-11 items-center justify-center rounded-none text-[var(--color-muted)] transition-colors duration-200 hover:bg-[var(--color-muted-bg)] hover:text-[var(--color-foreground)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-accent)]"
           >
             <LogOut className="h-4 w-4" strokeWidth={1.5} />
           </button>
