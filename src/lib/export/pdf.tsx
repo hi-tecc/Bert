@@ -6,8 +6,8 @@ import {
   StyleSheet,
   renderToBuffer,
 } from "@react-pdf/renderer";
-import { format } from "date-fns";
 import { formatMoney } from "../money";
+import { formatDate, formatDateTime } from "../date";
 import { BUDGET_LEVEL_LABEL } from "../budget";
 import type { ReportResult } from "../reports";
 
@@ -45,7 +45,7 @@ function ReportDocument({ report }: { report: ReportResult }) {
         <Text style={styles.title}>{report.title}</Text>
         <Text style={styles.meta}>Period: {report.rangeLabel}</Text>
         <Text style={styles.meta}>
-          Generated: {format(report.generatedAt, "PPpp")}
+          Generated: {formatDateTime(report.generatedAt)}
         </Text>
 
         <Text style={styles.section}>Purchases ({report.count})</Text>
@@ -59,7 +59,7 @@ function ReportDocument({ report }: { report: ReportResult }) {
         {report.rows.map((r, i) => (
           <View style={styles.row} key={i} wrap={false}>
             <Text style={[styles.cell, styles.date]}>
-              {format(r.date, "yyyy-MM-dd")}
+              {formatDate(r.date)}
             </Text>
             <Text style={[styles.cell, styles.company]}>{r.company}</Text>
             <Text style={[styles.cell, styles.employee]}>{r.employee}</Text>

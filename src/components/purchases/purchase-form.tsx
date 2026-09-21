@@ -1,15 +1,16 @@
 "use client";
 
-import { useActionState } from "react";
+import { useActionState, useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
 import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
-import { Select } from "@/components/ui/select";
+import { Combobox } from "@/components/ui/combobox";
 import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
 import { SubmitButton } from "@/components/ui/submit-button";
 import { Field } from "@/components/field";
 import type { FormState } from "@/lib/actions/form-state";
+import { useI18n } from "@/lib/i18n/context";
 
 interface PurchaseValues {
   employeeId?: string;
@@ -21,18 +22,38 @@ interface PurchaseValues {
 
 export function PurchaseForm({
   action,
+  companies,
   employees,
   defaultValues,
   submitLabel,
 }: {
   action: (prev: FormState, formData: FormData) => Promise<FormState>;
-  employees: { id: string; label: string }[];
+  companies: { id: string; label: string }[];
+  employees: { id: string; companyId: string; label: string }[];
   defaultValues?: PurchaseValues;
   submitLabel: string;
 }) {
   const router = useRouter();
   const [state, formAction] = useActionState<FormState, FormData>(action, {});
   const fe = state.fieldErrors ?? {};
+  const { t } = useI18n();
+
+  const initialEmployee = employees.find((e) => e.id === defaultValues?.employeeId);
+  const [companyId, setCompanyId] = useState(initialEmployee?.companyId ?? "");
+  const [employeeId, setEmployeeId] = useState(defaultValues?.employeeId ?? "");
+
+  const filteredEmployees = useMemo(
+    () => employees.filter((e) => e.companyId === companyId),
+    [employees, companyId],
+  );
+
+  function handleCompanyChange(value: string) {
+    setCompanyId(value);
+    const stillValid = employees.some((e) => e.id === employeeId && e.companyId === value);
+    if (!stillValid) {
+      setEmployeeId("");
+    }
+  }
 
   return (
     <Card>
@@ -44,26 +65,33 @@ export function PurchaseForm({
             </p>
           )}
 
-          <Field label="Employee" htmlFor="employeeId" error={fe.employeeId}>
-            <Select
+          <Field label={t.common.company} htmlFor="companyId" error={fe.companyId}>
+            <Combobox
+              id="companyId"
+              options={companies}
+              value={companyId}
+              onChange={handleCompanyChange}
+              placeholder={t.purchases.formSearchCompany}
+              required
+            />
+          </Field>
+
+          <Field label={t.common.employee} htmlFor="employeeId" error={fe.employeeId}>
+            <Combobox
               id="employeeId"
               name="employeeId"
-              defaultValue={defaultValues?.employeeId ?? ""}
+              options={filteredEmployees}
+              value={employeeId}
+              onChange={setEmployeeId}
+              placeholder={companyId ? t.purchases.formSearchEmployee : t.purchases.formSelectCompanyFirst}
+              emptyMessage={t.purchases.formNoEmployeesForCompany}
+              disabled={!companyId}
               required
-            >
-              <option value="" disabled>
-                Select an employee
-              </option>
-              {employees.map((e) => (
-                <option key={e.id} value={e.id}>
-                  {e.label}
-                </option>
-              ))}
-            </Select>
+            />
           </Field>
 
           <div className="grid gap-4 sm:grid-cols-2">
-            <Field label="Date" htmlFor="date" error={fe.date}>
+            <Field label={t.common.date} htmlFor="date" error={fe.date}>
               <Input
                 id="date"
                 name="date"
@@ -72,7 +100,7 @@ export function PurchaseForm({
                 required
               />
             </Field>
-            <Field label="Amount (EUR)" htmlFor="amount" error={fe.amount}>
+            <Field label={t.purchases.formAmount} htmlFor="amount" error={fe.amount}>
               <Input
                 id="amount"
                 name="amount"
@@ -85,7 +113,7 @@ export function PurchaseForm({
             </Field>
           </div>
 
-          <Field label="Description" htmlFor="description" error={fe.description}>
+          <Field label={t.common.description} htmlFor="description" error={fe.description}>
             <Input
               id="description"
               name="description"
@@ -94,7 +122,7 @@ export function PurchaseForm({
             />
           </Field>
 
-          <Field label="Notes (optional)" htmlFor="notes" error={fe.notes}>
+          <Field label={t.purchases.formNotesOptional} htmlFor="notes" error={fe.notes}>
             <Textarea
               id="notes"
               name="notes"
@@ -104,7 +132,7 @@ export function PurchaseForm({
 
           <div className="flex justify-end gap-2 pt-2">
             <Button type="button" variant="outline" onClick={() => router.back()}>
-              Cancel
+              {t.common.cancel}
             </Button>
             <SubmitButton>{submitLabel}</SubmitButton>
           </div>

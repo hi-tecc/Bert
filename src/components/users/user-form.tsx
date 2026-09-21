@@ -10,6 +10,7 @@ import { SubmitButton } from "@/components/ui/submit-button";
 import { Field } from "@/components/field";
 import { ROLES } from "@/lib/constants";
 import type { FormState } from "@/lib/actions/form-state";
+import { useI18n } from "@/lib/i18n/context";
 
 interface UserValues {
   name?: string;
@@ -35,6 +36,7 @@ export function UserForm({
   const [state, formAction] = useActionState<FormState, FormData>(action, {});
   const fe = state.fieldErrors ?? {};
   const [role, setRole] = useState(defaultValues?.role ?? ROLES.COMPANY_ADMIN);
+  const { t } = useI18n();
 
   return (
     <Card>
@@ -45,7 +47,7 @@ export function UserForm({
               {state.error}
             </p>
           )}
-          <Field label="Full name" htmlFor="name" error={fe.name}>
+          <Field label={t.users.formFullName} htmlFor="name" error={fe.name}>
             <Input
               id="name"
               name="name"
@@ -53,7 +55,7 @@ export function UserForm({
               required
             />
           </Field>
-          <Field label="Email" htmlFor="email" error={fe.email}>
+          <Field label={t.common.email} htmlFor="email" error={fe.email}>
             <Input
               id="email"
               name="email"
@@ -63,25 +65,25 @@ export function UserForm({
             />
           </Field>
           <div className="grid gap-4 sm:grid-cols-2">
-            <Field label="Role" htmlFor="role" error={fe.role}>
+            <Field label={t.common.role} htmlFor="role" error={fe.role}>
               <Select
                 id="role"
                 name="role"
                 value={role}
                 onChange={(e) => setRole(e.target.value)}
               >
-                <option value={ROLES.COMPANY_ADMIN}>Company admin</option>
-                <option value={ROLES.SHOP_ADMIN}>Shop admin</option>
+                <option value={ROLES.COMPANY_ADMIN}>{t.roles.companyAdmin}</option>
+                <option value={ROLES.SHOP_ADMIN}>{t.roles.shopAdmin}</option>
               </Select>
             </Field>
             {role === ROLES.COMPANY_ADMIN && (
-              <Field label="Company" htmlFor="companyId" error={fe.companyId}>
+              <Field label={t.common.company} htmlFor="companyId" error={fe.companyId}>
                 <Select
                   id="companyId"
                   name="companyId"
                   defaultValue={defaultValues?.companyId ?? ""}
                 >
-                  <option value="">Select a company…</option>
+                  <option value="">{t.common.selectCompanyEllipsis}</option>
                   {companies.map((c) => (
                     <option key={c.id} value={c.id}>
                       {c.name}
@@ -92,7 +94,7 @@ export function UserForm({
             )}
           </div>
           <Field
-            label={isEdit ? "New password" : "Password"}
+            label={isEdit ? t.users.formNewPassword : t.users.formPassword}
             htmlFor="password"
             error={fe.password}
           >
@@ -102,14 +104,14 @@ export function UserForm({
               type="password"
               autoComplete="new-password"
               placeholder={
-                isEdit ? "Leave blank to keep current password" : undefined
+                isEdit ? t.users.formKeepPassword : undefined
               }
               required={!isEdit}
             />
           </Field>
           <div className="flex justify-end gap-2 pt-2">
             <Button type="button" variant="outline" onClick={() => router.back()}>
-              Cancel
+              {t.common.cancel}
             </Button>
             <SubmitButton>{submitLabel}</SubmitButton>
           </div>

@@ -1,10 +1,10 @@
 import Link from "next/link";
-import { format } from "date-fns";
 import { Plus } from "lucide-react";
 import type { Prisma } from "@prisma/client";
 import { requireUser, isShopAdmin } from "@/lib/session";
 import { prisma } from "@/lib/prisma";
 import { formatMoney } from "@/lib/money";
+import { formatDate } from "@/lib/date";
 import { deletePurchaseAction } from "@/lib/actions/purchases";
 import { PageHeader } from "@/components/page-header";
 import { ListToolbar } from "@/components/list-toolbar";
@@ -12,6 +12,7 @@ import { DeleteButton } from "@/components/delete-button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Table, TBody, TD, TH, THead, TR } from "@/components/ui/table";
 import { MobileCards, MobileCard, MobileCardRow } from "@/components/ui/mobile-card";
+import { getT } from "@/lib/i18n/server";
 
 export default async function PurchasesPage({
   searchParams,
@@ -19,6 +20,7 @@ export default async function PurchasesPage({
   searchParams: Promise<{ q?: string }>;
 }) {
   const user = await requireUser();
+  const t = await getT();
   const { q } = await searchParams;
   const shopAdmin = isShopAdmin(user);
 
@@ -47,22 +49,22 @@ export default async function PurchasesPage({
   return (
     <div>
       <PageHeader
-        title="Purchases"
-        subtitle={shopAdmin ? "All purchases" : "Your company's purchases"}
+        title={t.common.purchases}
+        subtitle={shopAdmin ? t.purchases.subtitleAll : t.purchases.subtitleOwn}
         action={
           shopAdmin ? (
             <Link
               href="/purchases/new"
               className="inline-flex h-11 items-center gap-2 rounded-none bg-[var(--color-foreground)] px-6 text-xs font-medium uppercase tracking-[0.2em] text-[var(--color-primary-foreground)] shadow-[0_4px_16px_rgba(0,0,0,0.15)] transition-colors duration-500 hover:bg-[var(--color-accent)]"
             >
-              <Plus className="h-4 w-4" /> Register purchase
+              <Plus className="h-4 w-4" /> {t.purchases.register}
             </Link>
           ) : undefined
         }
       />
 
       <ListToolbar
-        placeholder="Search by description or employee..."
+        placeholder={t.purchases.searchPlaceholder}
         withStatusFilter={false}
       />
 
@@ -70,7 +72,7 @@ export default async function PurchasesPage({
         <CardContent className="p-0">
           {purchases.length === 0 ? (
             <p className="py-10 text-center text-sm text-slate-400">
-              No purchases found.
+              {t.purchases.none}
             </p>
           ) : (
             <>
@@ -78,19 +80,19 @@ export default async function PurchasesPage({
                 <Table>
                   <THead>
                     <TR>
-                      <TH>Date</TH>
-                      <TH>Description</TH>
-                      <TH>Employee</TH>
-                      <TH>Company</TH>
-                      <TH className="text-right">Amount</TH>
-                      {shopAdmin && <TH className="text-right">Actions</TH>}
+                      <TH>{t.common.date}</TH>
+                      <TH>{t.common.description}</TH>
+                      <TH>{t.common.employee}</TH>
+                      <TH>{t.common.company}</TH>
+                      <TH className="text-right">{t.common.amount}</TH>
+                      {shopAdmin && <TH className="text-right">{t.common.actions}</TH>}
                     </TR>
                   </THead>
                   <TBody>
                     {purchases.map((p) => (
                       <TR key={p.id}>
                         <TD className="whitespace-nowrap text-slate-500">
-                          {format(p.date, "MMM d, yyyy")}
+                          {formatDate(p.date)}
                         </TD>
                         <TD>
                           <span className="font-medium">{p.description}</span>
@@ -114,13 +116,13 @@ export default async function PurchasesPage({
                                 href={`/purchases/${p.id}/edit`}
                                 className="text-sm text-[var(--color-primary)] hover:underline"
                               >
-                                Edit
+                                {t.common.edit}
                               </Link>
                               <DeleteButton
                                 id={p.id}
                                 action={deletePurchaseAction}
                                 label=""
-                                confirmMessage="Delete this purchase?"
+                                confirmMessage={t.purchases.confirmDelete}
                               />
                             </div>
                           </TD>
@@ -141,13 +143,13 @@ export default async function PurchasesPage({
                     {p.notes && (
                       <p className="mb-2 text-xs text-slate-400">{p.notes}</p>
                     )}
-                    <MobileCardRow label="Date">
-                      {format(p.date, "MMM d, yyyy")}
+                    <MobileCardRow label={t.common.date}>
+                      {formatDate(p.date)}
                     </MobileCardRow>
-                    <MobileCardRow label="Employee">
+                    <MobileCardRow label={t.common.employee}>
                       {p.employee.firstName} {p.employee.lastName}
                     </MobileCardRow>
-                    <MobileCardRow label="Company">
+                    <MobileCardRow label={t.common.company}>
                       {p.employee.company.name}
                     </MobileCardRow>
                     {shopAdmin && (
@@ -156,13 +158,13 @@ export default async function PurchasesPage({
                           href={`/purchases/${p.id}/edit`}
                           className="text-sm text-[var(--color-primary)] hover:underline"
                         >
-                          Edit
+                          {t.common.edit}
                         </Link>
                         <DeleteButton
                           id={p.id}
                           action={deletePurchaseAction}
-                          label="Delete"
-                          confirmMessage="Delete this purchase?"
+                          label={t.common.delete}
+                          confirmMessage={t.purchases.confirmDelete}
                         />
                       </div>
                     )}

@@ -6,6 +6,7 @@ import { fromCents } from "@/lib/money";
 import { updateEmployeeAction } from "@/lib/actions/employees";
 import { PageHeader } from "@/components/page-header";
 import { EmployeeForm } from "@/components/employees/employee-form";
+import { getT } from "@/lib/i18n/server";
 
 export default async function EditEmployeePage({
   params,
@@ -13,6 +14,7 @@ export default async function EditEmployeePage({
   params: Promise<{ id: string }>;
 }) {
   const user = await requireUser();
+  const t = await getT();
   const { id } = await params;
   const employee = await prisma.employee.findUnique({ where: { id } });
   if (!employee) notFound();
@@ -31,7 +33,7 @@ export default async function EditEmployeePage({
   return (
     <div className="max-w-2xl">
       <PageHeader
-        title="Edit employee"
+        title={t.employees.editTitle}
         subtitle={`${employee.firstName} ${employee.lastName}`}
         emphasizeLast
       />
@@ -47,7 +49,7 @@ export default async function EditEmployeePage({
           annualBudgetDollars: fromCents(employee.annualBudget),
           active: employee.active,
         }}
-        submitLabel="Save changes"
+        submitLabel={t.common.saveChanges}
       />
     </div>
   );

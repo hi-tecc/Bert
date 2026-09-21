@@ -2,6 +2,7 @@ import { prisma } from "./prisma";
 import { budgetStatus, currentYear, yearRange, type BudgetStatus } from "./budget";
 import { employeeSpentMap } from "./queries";
 import { ROLES } from "./constants";
+import { formatDate } from "./date";
 import type { SessionUser } from "./session";
 
 export interface ReportParams {
@@ -43,6 +44,7 @@ export interface ReportResult {
 export async function buildReport(
   user: SessionUser,
   params: ReportParams,
+  labels?: { spendingReport: string; allCompanies: string; companyFallback: string },
 ): Promise<ReportResult> {
   const year = currentYear();
   const { start, end } = yearRange(year);
@@ -99,12 +101,12 @@ export async function buildReport(
   }));
 
   const scopeLabel = forcedCompanyId
-    ? (employees[0]?.company.name ?? "Company")
-    : "All companies";
+    ? (employees[0]?.company.name ?? (labels?.companyFallback ?? "Company"))
+    : (labels?.allCompanies ?? "All companies");
 
   return {
-    title: `Spending report — ${scopeLabel}`,
-    rangeLabel: `${from.toLocaleDateString()} – ${new Date(to.getTime() - 1).toLocaleDateString()}`,
+    title: `${labels?.spendingReport ?? "Spending report"} — ${scopeLabel}`,
+    rangeLabel: `${formatDate(from)} – ${formatDate(new Date(to.getTime() - 1))}`,
     generatedAt: new Date(),
     rows,
     total,

@@ -4,6 +4,7 @@ import { prisma } from "@/lib/prisma";
 import { updateUserAction } from "@/lib/actions/users";
 import { PageHeader } from "@/components/page-header";
 import { UserForm } from "@/components/users/user-form";
+import { getT } from "@/lib/i18n/server";
 
 export default async function EditUserPage({
   params,
@@ -11,6 +12,7 @@ export default async function EditUserPage({
   params: Promise<{ id: string }>;
 }) {
   await requireShopAdmin();
+  const t = await getT();
   const { id } = await params;
   const [user, companies] = await Promise.all([
     prisma.user.findUnique({ where: { id } }),
@@ -25,11 +27,11 @@ export default async function EditUserPage({
 
   return (
     <div className="max-w-2xl">
-      <PageHeader title="Edit user" subtitle={user.email} emphasizeLast />
+      <PageHeader title={t.users.editTitle} subtitle={user.email} emphasizeLast />
       <UserForm
         action={action}
         companies={companies}
-        submitLabel="Save changes"
+        submitLabel={t.common.saveChanges}
         isEdit
         defaultValues={{
           name: user.name,

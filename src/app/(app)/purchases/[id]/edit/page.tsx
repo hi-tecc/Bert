@@ -6,6 +6,7 @@ import { fromCents } from "@/lib/money";
 import { updatePurchaseAction } from "@/lib/actions/purchases";
 import { PageHeader } from "@/components/page-header";
 import { PurchaseForm } from "@/components/purchases/purchase-form";
+import { getT } from "@/lib/i18n/server";
 
 export default async function EditPurchasePage({
   params,
@@ -13,27 +14,35 @@ export default async function EditPurchasePage({
   params: Promise<{ id: string }>;
 }) {
   await requireShopAdmin();
+  const t = await getT();
   const { id } = await params;
   const purchase = await prisma.purchase.findUnique({ where: { id } });
   if (!purchase) notFound();
 
-  const employees = await prisma.employee.findMany({
-    include: { company: { select: { name: true } } },
-    orderBy: [{ company: { name: "asc" } }, { lastName: "asc" }],
-  });
-  const options = employees.map((e) => ({
+  const [companies, employees] = await Promise.all([
+    prisma.company.findMany({
+      orderBy: { name: "asc" },
+    }),
+    prisma.employee.findMany({
+      orderBy: [{ company: { name: "asc" } }, { lastName: "asc" }],
+    }),
+  ]);
+  const companyOptions = companies.map((c) => ({ id: c.id, label: c.name }));
+  const employeeOptions = employees.map((e) => ({
     id: e.id,
-    label: `${e.company.name} — ${e.firstName} ${e.lastName}`,
+    companyId: e.companyId,
+    label: `${e.firstName} ${e.lastName}`,
   }));
 
   const action = updatePurchaseAction.bind(null, id);
 
   return (
     <div className="max-w-2xl">
-      <PageHeader title="Edit purchase" subtitle="Correct a purchase record" emphasizeLast />
+      <PageHeader title={t.purchases.editTitle} subtitle={t.purchases.editSubtitle} emphasizeLast />
       <PurchaseForm
         action={action}
-        employees={options}
+        companies={companyOptions}
+        employees={employeeOptions}
         defaultValues={{
           employeeId: purchase.employeeId,
           date: format(purchase.date, "yyyy-MM-dd"),
@@ -41,7 +50,7 @@ export default async function EditPurchasePage({
           description: purchase.description,
           notes: purchase.notes,
         }}
-        submitLabel="Save changes"
+        submitLabel={t.common.saveChanges}
       />
     </div>
   );

@@ -1,12 +1,13 @@
-import { format } from "date-fns";
 import type { Prisma } from "@prisma/client";
 import { requireShopAdmin } from "@/lib/session";
 import { prisma } from "@/lib/prisma";
+import { formatDateTime } from "@/lib/date";
 import { PageHeader } from "@/components/page-header";
 import { Card, CardContent } from "@/components/ui/card";
 import { Table, TBody, TD, TH, THead, TR } from "@/components/ui/table";
 import { MobileCards, MobileCard, MobileCardRow } from "@/components/ui/mobile-card";
 import { Badge } from "@/components/ui/badge";
+import { getT } from "@/lib/i18n/server";
 
 const actionTone: Record<string, "success" | "warning" | "danger"> = {
   CREATE: "success",
@@ -20,6 +21,7 @@ export default async function AuditPage({
   searchParams: Promise<{ entity?: string }>;
 }) {
   await requireShopAdmin();
+  const t = await getT();
   const { entity } = await searchParams;
 
   const where: Prisma.AuditLogWhereInput =
@@ -32,11 +34,24 @@ export default async function AuditPage({
     take: 200,
   });
 
+  const entityLabels: Record<string, string> = {
+    all: t.audit.all,
+    Company: t.audit.entityCompany,
+    Employee: t.audit.entityEmployee,
+    Purchase: t.audit.entityPurchase,
+    User: t.audit.entityUser,
+  };
+  const actionLabels: Record<string, string> = {
+    CREATE: t.audit.actionCreate,
+    UPDATE: t.audit.actionUpdate,
+    DELETE: t.audit.actionDelete,
+  };
+
   return (
     <div>
       <PageHeader
-        title="Audit log"
-        subtitle="All changes across the system"
+        title={t.audit.title}
+        subtitle={t.audit.subtitle}
         emphasizeLast
       />
 
@@ -54,7 +69,7 @@ export default async function AuditPage({
                   : "border border-[var(--color-border)] bg-transparent text-[var(--color-muted)] hover:border-[var(--color-foreground)] hover:text-[var(--color-foreground)]")
               }
             >
-              {e === "all" ? "All" : e}
+              {entityLabels[e] ?? e}
             </a>
           );
         })}
@@ -64,7 +79,7 @@ export default async function AuditPage({
         <CardContent className="p-0">
           {logs.length === 0 ? (
             <p className="py-10 text-center text-sm text-slate-400">
-              No audit entries.
+              {t.audit.none}
             </p>
           ) : (
             <>
@@ -72,29 +87,29 @@ export default async function AuditPage({
                 <Table>
                   <THead>
                     <TR>
-                      <TH>When</TH>
-                      <TH>User</TH>
-                      <TH>Action</TH>
-                      <TH>Entity</TH>
-                      <TH>Changes</TH>
+                      <TH>{t.audit.thWhen}</TH>
+                      <TH>{t.audit.thUser}</TH>
+                      <TH>{t.audit.thAction}</TH>
+                      <TH>{t.audit.thEntity}</TH>
+                      <TH>{t.audit.thChanges}</TH>
                     </TR>
                   </THead>
                   <TBody>
                     {logs.map((log) => (
                       <TR key={log.id}>
                         <TD className="whitespace-nowrap text-slate-500">
-                          {format(log.createdAt, "MMM d, yyyy HH:mm")}
+                          {formatDateTime(log.createdAt)}
                         </TD>
                         <TD className="text-slate-600">
-                          {log.user?.name ?? "System"}
+                          {log.user?.name ?? t.audit.system}
                         </TD>
                         <TD>
                           <Badge tone={actionTone[log.action] ?? "neutral"}>
-                            {log.action}
+                            {actionLabels[log.action] ?? log.action}
                           </Badge>
                         </TD>
                         <TD className="text-slate-600">
-                          {log.entityType}
+                          {entityLabels[log.entityType] ?? log.entityType}
                           <span className="block font-mono text-xs text-slate-400">
                             {log.entityId.slice(0, 10)}…
                           </span>
@@ -119,15 +134,15 @@ export default async function AuditPage({
                   <MobileCard key={log.id}>
                     <div className="mb-2 flex items-center justify-between gap-3">
                       <Badge tone={actionTone[log.action] ?? "neutral"}>
-                        {log.action}
+                        {actionLabels[log.action] ?? log.action}
                       </Badge>
                       <span className="text-xs text-slate-400">
-                        {format(log.createdAt, "MMM d, yyyy HH:mm")}
+                        {formatDateTime(log.createdAt)}
                       </span>
                     </div>
-                    <MobileCardRow label="Entity">{log.entityType}</MobileCardRow>
-                    <MobileCardRow label="User">
-                      {log.user?.name ?? "System"}
+                    <MobileCardRow label={t.audit.thEntity}>{entityLabels[log.entityType] ?? log.entityType}</MobileCardRow>
+                    <MobileCardRow label={t.audit.thUser}>
+                      {log.user?.name ?? t.audit.system}
                     </MobileCardRow>
                     {log.changes && (
                       <code className="mt-2 block truncate text-xs text-slate-500">

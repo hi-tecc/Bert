@@ -14,8 +14,10 @@ import {
   RecentPurchases,
   type RecentPurchaseRow,
 } from "@/components/dashboard/recent-purchases";
+import { getT } from "@/lib/i18n/server";
 
 export async function CompanyDashboard({ companyId }: { companyId: string }) {
+  const t = await getT();
   const company = await prisma.company.findUnique({ where: { id: companyId } });
   if (!company) notFound();
 
@@ -51,24 +53,24 @@ export async function CompanyDashboard({ companyId }: { companyId: string }) {
     <div className="space-y-6">
       <div>
         <h1 className="font-serif text-3xl tracking-tight md:text-4xl">{company.name}</h1>
-        <p className="mt-1.5 text-sm text-[var(--color-muted)]">Company overview · {year}</p>
+        <p className="mt-1.5 text-sm text-[var(--color-muted)]">{t.dashboard.companyOverview(year)}</p>
       </div>
 
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-        <StatCard label="Employees" value={String(employees.length)} icon={Users} />
+        <StatCard label={t.common.employees} value={String(employees.length)} icon={Users} />
         <StatCard
-          label="Annual budget"
+          label={t.common.annualBudget}
           value={formatMoney(totalBudget)}
           icon={Wallet}
         />
         <StatCard
-          label="Spent"
+          label={t.common.spent}
           value={formatMoney(totalSpent)}
-          hint={`${summary.percent}% of budget`}
+          hint={t.common.percentOfBudget(summary.percent)}
           icon={Euro}
         />
         <StatCard
-          label="Remaining"
+          label={t.common.remaining}
           value={formatMoney(summary.remaining)}
           icon={PiggyBank}
         />
@@ -76,13 +78,13 @@ export async function CompanyDashboard({ companyId }: { companyId: string }) {
 
       <Card>
         <CardHeader className="flex items-center justify-between">
-          <CardTitle emphasizeLast>Employee budgets</CardTitle>
+          <CardTitle emphasizeLast>{t.dashboard.employeeBudgets}</CardTitle>
           <BudgetStatusBadge level={summary.level} percent={summary.percent} />
         </CardHeader>
         <CardContent className="pt-3">
           {employees.length === 0 ? (
             <p className="py-6 text-center text-sm text-slate-400">
-              No employees yet.
+              {t.dashboard.noEmployeesYet}
             </p>
           ) : (
             <>
@@ -90,11 +92,11 @@ export async function CompanyDashboard({ companyId }: { companyId: string }) {
                 <Table>
                   <THead>
                     <TR>
-                      <TH>Employee</TH>
-                      <TH className="text-right">Budget</TH>
-                      <TH className="text-right">Spent</TH>
-                      <TH className="text-right">Remaining</TH>
-                      <TH className="w-48">Usage</TH>
+                      <TH>{t.common.employee}</TH>
+                      <TH className="text-right">{t.common.budget}</TH>
+                      <TH className="text-right">{t.common.spent}</TH>
+                      <TH className="text-right">{t.common.remaining}</TH>
+                      <TH className="w-48">{t.common.usage}</TH>
                     </TR>
                   </THead>
                   <TBody>
@@ -131,13 +133,13 @@ export async function CompanyDashboard({ companyId }: { companyId: string }) {
                     <p className="mb-2 font-medium">
                       {e.firstName} {e.lastName}
                     </p>
-                    <MobileCardRow label="Budget">
+                    <MobileCardRow label={t.common.budget}>
                       {formatMoney(e.annualBudget)}
                     </MobileCardRow>
-                    <MobileCardRow label="Spent">
+                    <MobileCardRow label={t.common.spent}>
                       {formatMoney(e.status.spent)}
                     </MobileCardRow>
-                    <MobileCardRow label="Remaining">
+                    <MobileCardRow label={t.common.remaining}>
                       {formatMoney(e.status.remaining)}
                     </MobileCardRow>
                     <div className="mt-2 flex items-center gap-2">

@@ -1,5 +1,6 @@
 import { Badge } from "@/components/ui/badge";
-import { BUDGET_LEVEL_LABEL, type BudgetLevel } from "@/lib/budget";
+import type { BudgetLevel } from "@/lib/budget";
+import { getT } from "@/lib/i18n/server";
 
 const tone: Record<BudgetLevel, "success" | "warning" | "danger"> = {
   ok: "success",
@@ -8,16 +9,17 @@ const tone: Record<BudgetLevel, "success" | "warning" | "danger"> = {
   exceeded: "danger",
 };
 
-export function BudgetStatusBadge({
+export async function BudgetStatusBadge({
   level,
   percent,
 }: {
   level: BudgetLevel;
   percent?: number;
 }) {
+  const t = await getT();
   return (
     <Badge tone={tone[level]}>
-      {BUDGET_LEVEL_LABEL[level]}
+      {t.budgetLevels[level]}
       {percent !== undefined ? ` · ${percent}%` : ""}
     </Badge>
   );

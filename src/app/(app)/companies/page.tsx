@@ -12,6 +12,7 @@ import { Table, TBody, TD, TH, THead, TR } from "@/components/ui/table";
 import { MobileCards, MobileCard, MobileCardRow } from "@/components/ui/mobile-card";
 import { Badge } from "@/components/ui/badge";
 import { BudgetBar } from "@/components/ui/budget-bar";
+import { getT } from "@/lib/i18n/server";
 
 export default async function CompaniesPage({
   searchParams,
@@ -19,6 +20,7 @@ export default async function CompaniesPage({
   searchParams: Promise<{ q?: string; status?: string }>;
 }) {
   await requireShopAdmin();
+  const t = await getT();
   const { q, status } = await searchParams;
   const year = currentYear();
 
@@ -52,25 +54,25 @@ export default async function CompaniesPage({
   return (
     <div>
       <PageHeader
-        title="Companies"
-        subtitle="Manage customer companies"
+        title={t.common.companies}
+        subtitle={t.companies.subtitle}
         action={
           <Link
             href="/companies/new"
             className="inline-flex h-11 items-center gap-2 rounded-none bg-[var(--color-foreground)] px-6 text-xs font-medium uppercase tracking-[0.2em] text-[var(--color-primary-foreground)] shadow-[0_4px_16px_rgba(0,0,0,0.15)] transition-colors duration-500 hover:bg-[var(--color-accent)]"
           >
-            <Plus className="h-4 w-4" /> New company
+            <Plus className="h-4 w-4" /> {t.companies.new}
           </Link>
         }
       />
 
-      <ListToolbar placeholder="Search companies by name..." />
+      <ListToolbar placeholder={t.companies.searchPlaceholder} />
 
       <Card>
         <CardContent className="p-0">
           {rows.length === 0 ? (
             <p className="py-10 text-center text-sm text-slate-400">
-              No companies found.
+              {t.companies.none}
             </p>
           ) : (
             <>
@@ -78,11 +80,11 @@ export default async function CompaniesPage({
                 <Table>
                   <THead>
                     <TR>
-                      <TH>Company</TH>
-                      <TH>Contact</TH>
-                      <TH className="text-center">Employees</TH>
-                      <TH className="w-56">Budget usage</TH>
-                      <TH>Status</TH>
+                      <TH>{t.common.company}</TH>
+                      <TH>{t.common.contact}</TH>
+                      <TH className="text-center">{t.common.employees}</TH>
+                      <TH className="w-56">{t.companies.thBudgetUsage}</TH>
+                      <TH>{t.common.status}</TH>
                     </TR>
                   </THead>
                   <TBody>
@@ -113,7 +115,7 @@ export default async function CompaniesPage({
                         </TD>
                         <TD>
                           <Badge tone={c.active ? "success" : "neutral"}>
-                            {c.active ? "Active" : "Inactive"}
+                            {c.active ? t.common.active : t.common.inactive}
                           </Badge>
                         </TD>
                       </TR>
@@ -133,7 +135,7 @@ export default async function CompaniesPage({
                         {c.name}
                       </Link>
                       <Badge tone={c.active ? "success" : "neutral"}>
-                        {c.active ? "Active" : "Inactive"}
+                        {c.active ? t.common.active : t.common.inactive}
                       </Badge>
                     </div>
                     {c.contactPerson && (
@@ -142,7 +144,7 @@ export default async function CompaniesPage({
                         {c.email ? ` · ${c.email}` : ""}
                       </p>
                     )}
-                    <MobileCardRow label="Employees">
+                    <MobileCardRow label={t.common.employees}>
                       {c.employees.length}
                     </MobileCardRow>
                     <div className="mt-2">

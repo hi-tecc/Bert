@@ -1,9 +1,10 @@
 import Link from "next/link";
-import { format } from "date-fns";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Table, TBody, TD, TH, THead, TR } from "@/components/ui/table";
 import { MobileCard, MobileCardRow } from "@/components/ui/mobile-card";
 import { formatMoney } from "@/lib/money";
+import { formatDate } from "@/lib/date";
+import { getT } from "@/lib/i18n/server";
 
 export interface RecentPurchaseRow {
   id: string;
@@ -14,28 +15,29 @@ export interface RecentPurchaseRow {
   companyName?: string;
 }
 
-export function RecentPurchases({
+export async function RecentPurchases({
   rows,
   showCompany = false,
 }: {
   rows: RecentPurchaseRow[];
   showCompany?: boolean;
 }) {
+  const t = await getT();
   return (
     <Card>
       <CardHeader className="flex items-center justify-between">
-        <CardTitle emphasizeLast>Recent purchases</CardTitle>
+        <CardTitle emphasizeLast>{t.dashboard.recentPurchases}</CardTitle>
         <Link
           href="/purchases"
           className="text-sm text-[var(--color-primary)] hover:underline"
         >
-          View all
+          {t.dashboard.viewAll}
         </Link>
       </CardHeader>
       <CardContent className="pt-3">
         {rows.length === 0 ? (
           <p className="py-6 text-center text-sm text-slate-400">
-            No purchases yet.
+            {t.dashboard.noPurchasesYet}
           </p>
         ) : (
           <>
@@ -43,18 +45,18 @@ export function RecentPurchases({
               <Table>
                 <THead>
                   <TR>
-                    <TH>Date</TH>
-                    <TH>Description</TH>
-                    <TH>Employee</TH>
-                    {showCompany && <TH>Company</TH>}
-                    <TH className="text-right">Amount</TH>
+                    <TH>{t.common.date}</TH>
+                    <TH>{t.common.description}</TH>
+                    <TH>{t.common.employee}</TH>
+                    {showCompany && <TH>{t.common.company}</TH>}
+                    <TH className="text-right">{t.common.amount}</TH>
                   </TR>
                 </THead>
                 <TBody>
                   {rows.map((r) => (
                     <TR key={r.id}>
                       <TD className="whitespace-nowrap text-slate-500">
-                        {format(r.date, "MMM d, yyyy")}
+                        {formatDate(r.date)}
                       </TD>
                       <TD className="font-medium">{r.description}</TD>
                       <TD className="text-slate-600">{r.employeeName}</TD>
@@ -77,12 +79,12 @@ export function RecentPurchases({
                     <span className="font-medium">{r.description}</span>
                     <span className="font-medium">{formatMoney(r.amount)}</span>
                   </div>
-                  <MobileCardRow label="Date">
-                    {format(r.date, "MMM d, yyyy")}
+                  <MobileCardRow label={t.common.date}>
+                    {formatDate(r.date)}
                   </MobileCardRow>
-                  <MobileCardRow label="Employee">{r.employeeName}</MobileCardRow>
+                  <MobileCardRow label={t.common.employee}>{r.employeeName}</MobileCardRow>
                   {showCompany && r.companyName && (
-                    <MobileCardRow label="Company">{r.companyName}</MobileCardRow>
+                    <MobileCardRow label={t.common.company}>{r.companyName}</MobileCardRow>
                   )}
                 </MobileCard>
               ))}

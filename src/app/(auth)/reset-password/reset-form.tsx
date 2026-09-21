@@ -7,17 +7,19 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { SubmitButton } from "@/components/ui/submit-button";
+import { useI18n } from "@/lib/i18n/context";
 
 export function ResetPasswordForm({ token }: { token: string }) {
   const [state, action] = useActionState<ActionState, FormData>(
     resetPasswordAction,
     {},
   );
+  const { t } = useI18n();
 
   return (
     <Card>
       <CardContent>
-        <h2 className="mb-4 text-lg font-semibold">Choose a new password</h2>
+        <h2 className="mb-4 text-lg font-semibold">{t.auth.resetTitle}</h2>
         <form action={action} className="space-y-4">
           <input type="hidden" name="token" value={token} />
           {state.error && (
@@ -31,7 +33,7 @@ export function ResetPasswordForm({ token }: { token: string }) {
             </p>
           )}
           <div>
-            <Label htmlFor="password">New password</Label>
+            <Label htmlFor="password">{t.auth.newPassword}</Label>
             <Input
               id="password"
               name="password"
@@ -41,7 +43,7 @@ export function ResetPasswordForm({ token }: { token: string }) {
             />
           </div>
           <div>
-            <Label htmlFor="confirm">Confirm password</Label>
+            <Label htmlFor="confirm">{t.auth.confirmPassword}</Label>
             <Input
               id="confirm"
               name="confirm"
@@ -50,14 +52,14 @@ export function ResetPasswordForm({ token }: { token: string }) {
               required
             />
           </div>
-          <SubmitButton className="w-full">Update password</SubmitButton>
+          <SubmitButton className="w-full">{t.auth.updatePassword}</SubmitButton>
         </form>
         <div className="mt-4 text-center text-sm">
           <Link
             href="/login"
             className="text-[var(--color-primary)] hover:underline"
           >
-            Back to sign in
+            {t.auth.backToSignIn}
           </Link>
         </div>
       </CardContent>

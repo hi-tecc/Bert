@@ -5,9 +5,11 @@ import { usePathname } from "next/navigation";
 import { cn } from "@/lib/utils";
 import { navItemsForRole, isNavItemActive } from "./nav-items";
 import type { Role } from "@/lib/constants";
+import { useI18n } from "@/lib/i18n/context";
 
 export function Sidebar({ role }: { role: Role }) {
   const pathname = usePathname();
+  const { t } = useI18n();
   const items = navItemsForRole(role);
 
   return (
@@ -16,7 +18,7 @@ export function Sidebar({ role }: { role: Role }) {
         <div className="flex h-9 w-9 items-center justify-center rounded-none bg-[var(--color-foreground)] font-serif text-lg text-[var(--color-primary-foreground)]">
           B
         </div>
-        <span className="font-serif text-lg tracking-tight">Budget Tracker</span>
+        <span className="font-serif text-lg tracking-tight">{t.common.appName}</span>
       </div>
       <nav className="space-y-1 p-4">
         {items.map((item) => {
@@ -34,7 +36,7 @@ export function Sidebar({ role }: { role: Role }) {
               )}
             >
               <Icon className="h-4 w-4" strokeWidth={1.5} />
-              {item.label}
+              {t.nav[item.labelKey]}
             </Link>
           );
         })}

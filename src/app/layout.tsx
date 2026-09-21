@@ -1,6 +1,8 @@
 import type { Metadata, Viewport } from "next";
 import { Inter, Playfair_Display } from "next/font/google";
 import "./globals.css";
+import { getLocale, getDictionary } from "@/lib/i18n/server";
+import { I18nProvider } from "@/lib/i18n/context";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -25,11 +27,15 @@ export const viewport: Viewport = {
   initialScale: 1,
 };
 
-export default function RootLayout({ children }: LayoutProps<"/">) {
+export default async function RootLayout({ children }: LayoutProps<"/">) {
+  const locale = await getLocale();
+  const dictionary = getDictionary(locale);
   return (
-    <html lang="en" className={`${inter.variable} ${playfair.variable}`}>
+    <html lang={locale} className={`${inter.variable} ${playfair.variable}`}>
       <body>
-        {children}
+        <I18nProvider locale={locale} dictionary={dictionary}>
+          {children}
+        </I18nProvider>
         <div className="paper-grain" aria-hidden />
       </body>
     </html>

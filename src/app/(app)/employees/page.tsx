@@ -14,6 +14,7 @@ import { Table, TBody, TD, TH, THead, TR } from "@/components/ui/table";
 import { MobileCards, MobileCard, MobileCardRow } from "@/components/ui/mobile-card";
 import { Badge } from "@/components/ui/badge";
 import { BudgetBar } from "@/components/ui/budget-bar";
+import { getT } from "@/lib/i18n/server";
 
 export default async function EmployeesPage({
   searchParams,
@@ -21,6 +22,7 @@ export default async function EmployeesPage({
   searchParams: Promise<{ q?: string; status?: string }>;
 }) {
   const user = await requireUser();
+  const t = await getT();
   const { q, status } = await searchParams;
   const year = currentYear();
   const isShopAdmin = user.role === ROLES.SHOP_ADMIN;
@@ -57,25 +59,25 @@ export default async function EmployeesPage({
   return (
     <div>
       <PageHeader
-        title="Employees"
-        subtitle={isShopAdmin ? "All employees" : "Your company's employees"}
+        title={t.common.employees}
+        subtitle={isShopAdmin ? t.employees.subtitleAll : t.employees.subtitleOwn}
         action={
           <Link
             href="/employees/new"
             className="inline-flex h-11 items-center gap-2 rounded-none bg-[var(--color-foreground)] px-6 text-xs font-medium uppercase tracking-[0.2em] text-[var(--color-primary-foreground)] shadow-[0_4px_16px_rgba(0,0,0,0.15)] transition-colors duration-500 hover:bg-[var(--color-accent)]"
           >
-            <Plus className="h-4 w-4" /> New employee
+            <Plus className="h-4 w-4" /> {t.employees.new}
           </Link>
         }
       />
 
-      <ListToolbar placeholder="Search by name or email..." />
+      <ListToolbar placeholder={t.employees.searchPlaceholder} />
 
       <Card>
         <CardContent className="p-0">
           {employees.length === 0 ? (
             <p className="py-10 text-center text-sm text-slate-400">
-              No employees found.
+              {t.employees.none}
             </p>
           ) : (
             <>
@@ -83,12 +85,12 @@ export default async function EmployeesPage({
                 <Table>
                   <THead>
                     <TR>
-                      <TH>Employee</TH>
-                      {isShopAdmin && <TH>Company</TH>}
-                      <TH className="text-right">Budget</TH>
-                      <TH className="text-right">Spent</TH>
-                      <TH className="w-48">Usage</TH>
-                      <TH>Status</TH>
+                      <TH>{t.common.employee}</TH>
+                      {isShopAdmin && <TH>{t.common.company}</TH>}
+                      <TH className="text-right">{t.common.budget}</TH>
+                      <TH className="text-right">{t.common.spent}</TH>
+                      <TH className="w-48">{t.common.usage}</TH>
+                      <TH>{t.common.status}</TH>
                     </TR>
                   </THead>
                   <TBody>
@@ -122,7 +124,7 @@ export default async function EmployeesPage({
                           </TD>
                           <TD>
                             <Badge tone={e.active ? "success" : "neutral"}>
-                              {e.active ? "Active" : "Inactive"}
+                              {e.active ? t.common.active : t.common.inactive}
                             </Badge>
                           </TD>
                         </TR>
@@ -150,16 +152,16 @@ export default async function EmployeesPage({
                           </span>
                         </div>
                         <Badge tone={e.active ? "success" : "neutral"}>
-                          {e.active ? "Active" : "Inactive"}
+                          {e.active ? t.common.active : t.common.inactive}
                         </Badge>
                       </div>
                       {isShopAdmin && (
-                        <MobileCardRow label="Company">{e.company.name}</MobileCardRow>
+                        <MobileCardRow label={t.common.company}>{e.company.name}</MobileCardRow>
                       )}
-                      <MobileCardRow label="Budget">
+                      <MobileCardRow label={t.common.budget}>
                         {formatMoney(e.annualBudget)}
                       </MobileCardRow>
-                      <MobileCardRow label="Spent">
+                      <MobileCardRow label={t.common.spent}>
                         {formatMoney(bs.spent)}
                       </MobileCardRow>
                       <div className="mt-2 flex items-center gap-2">

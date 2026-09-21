@@ -13,8 +13,10 @@ import {
   type RecentPurchaseRow,
 } from "@/components/dashboard/recent-purchases";
 import { SpendingChart } from "@/components/dashboard/spending-chart";
+import { getT } from "@/lib/i18n/server";
 
 export async function ShopDashboard() {
+  const t = await getT();
   const year = currentYear();
   const { start, end } = yearRange(year);
 
@@ -57,21 +59,21 @@ export async function ShopDashboard() {
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="font-serif text-3xl tracking-tight md:text-4xl">Dashboard</h1>
-        <p className="mt-1.5 text-sm text-[var(--color-muted)]">Overview across all companies</p>
+        <h1 className="font-serif text-3xl tracking-tight md:text-4xl">{t.dashboard.title}</h1>
+        <p className="mt-1.5 text-sm text-[var(--color-muted)]">{t.dashboard.subtitle}</p>
       </div>
 
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-        <StatCard label="Companies" value={String(companiesCount)} icon={Building2} />
-        <StatCard label="Employees" value={String(employeesCount)} icon={Users} />
+        <StatCard label={t.dashboard.statCompanies} value={String(companiesCount)} icon={Building2} />
+        <StatCard label={t.dashboard.statEmployees} value={String(employeesCount)} icon={Users} />
         <StatCard
-          label="Total spending"
+          label={t.dashboard.statTotalSpending}
           value={formatMoney(allTime._sum.amount ?? 0)}
-          hint="All time"
+          hint={t.dashboard.allTime}
           icon={Euro}
         />
         <StatCard
-          label={`Spending in ${year}`}
+          label={t.dashboard.spendingIn(year)}
           value={formatMoney(thisYear._sum.amount ?? 0)}
           icon={TrendingUp}
         />
@@ -81,9 +83,9 @@ export async function ShopDashboard() {
         <Card className="lg:col-span-2">
           <CardHeader>
             <CardTitle>
-              Budget vs.{" "}
-              <span className="italic text-[var(--color-accent)]">spending</span> by
-              company
+              {t.dashboard.chartTitlePrefix}
+              <span className="italic text-[var(--color-accent)]">{t.dashboard.chartTitleAccent}</span>
+              {t.dashboard.chartTitleSuffix}
             </CardTitle>
           </CardHeader>
           <CardContent>
@@ -91,7 +93,7 @@ export async function ShopDashboard() {
               <SpendingChart data={chartData} />
             ) : (
               <p className="py-10 text-center text-sm text-slate-400">
-                No companies yet.
+                {t.dashboard.noCompanies}
               </p>
             )}
           </CardContent>
@@ -99,12 +101,12 @@ export async function ShopDashboard() {
 
         <Card>
           <CardHeader>
-            <CardTitle emphasizeLast>Companies nearing budget</CardTitle>
+            <CardTitle emphasizeLast>{t.dashboard.nearingTitle}</CardTitle>
           </CardHeader>
           <CardContent className="space-y-4">
             {nearing.length === 0 ? (
               <p className="py-6 text-center text-sm text-slate-400">
-                All companies are on track.
+                {t.dashboard.allOnTrack}
               </p>
             ) : (
               nearing.map((s) => (
@@ -122,7 +124,7 @@ export async function ShopDashboard() {
                   </div>
                   <BudgetBar percent={s.status.percent} level={s.status.level} />
                   <p className="mt-1.5 text-xs text-slate-500">
-                    {formatMoney(s.totalSpent)} of {formatMoney(s.totalBudget)}
+                    {formatMoney(s.totalSpent)} {t.common.of} {formatMoney(s.totalBudget)}
                   </p>
                 </Link>
               ))

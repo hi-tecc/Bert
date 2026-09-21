@@ -3,6 +3,7 @@
 import { useRouter, usePathname, useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import { Search } from "lucide-react";
+import { useI18n } from "@/lib/i18n/context";
 
 /** URL-synced search + optional status filter for list pages. */
 export function ListToolbar({
@@ -15,6 +16,7 @@ export function ListToolbar({
   const router = useRouter();
   const pathname = usePathname();
   const params = useSearchParams();
+  const { t } = useI18n();
 
   const [q, setQ] = useState(params.get("q") ?? "");
   const status = params.get("status") ?? "all";
@@ -56,9 +58,9 @@ export function ListToolbar({
           onChange={(e) => setStatus(e.target.value)}
           className="h-11 w-full rounded-none border-0 border-b border-[var(--color-foreground)]/30 bg-transparent px-0 text-sm outline-none transition-colors duration-500 focus-visible:border-[var(--color-accent)] sm:w-auto"
         >
-          <option value="all">All statuses</option>
-          <option value="active">Active</option>
-          <option value="inactive">Inactive</option>
+          <option value="all">{t.common.allStatuses}</option>
+          <option value="active">{t.common.active}</option>
+          <option value="inactive">{t.common.inactive}</option>
         </select>
       )}
     </div>

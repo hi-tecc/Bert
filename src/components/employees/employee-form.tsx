@@ -9,6 +9,7 @@ import { Button } from "@/components/ui/button";
 import { SubmitButton } from "@/components/ui/submit-button";
 import { Field } from "@/components/field";
 import type { FormState } from "@/lib/actions/form-state";
+import { useI18n } from "@/lib/i18n/context";
 
 interface EmployeeValues {
   companyId?: string;
@@ -35,6 +36,7 @@ export function EmployeeForm({
   const router = useRouter();
   const [state, formAction] = useActionState<FormState, FormData>(action, {});
   const fe = state.fieldErrors ?? {};
+  const { t } = useI18n();
 
   return (
     <Card>
@@ -49,7 +51,7 @@ export function EmployeeForm({
           {lockedCompanyId ? (
             <input type="hidden" name="companyId" value={lockedCompanyId} />
           ) : (
-            <Field label="Company" htmlFor="companyId" error={fe.companyId}>
+            <Field label={t.common.company} htmlFor="companyId" error={fe.companyId}>
               <Select
                 id="companyId"
                 name="companyId"
@@ -57,7 +59,7 @@ export function EmployeeForm({
                 required
               >
                 <option value="" disabled>
-                  Select a company
+                  {t.common.selectCompany}
                 </option>
                 {companies.map((c) => (
                   <option key={c.id} value={c.id}>
@@ -69,7 +71,7 @@ export function EmployeeForm({
           )}
 
           <div className="grid gap-4 sm:grid-cols-2">
-            <Field label="First name" htmlFor="firstName" error={fe.firstName}>
+            <Field label={t.employees.formFirstName} htmlFor="firstName" error={fe.firstName}>
               <Input
                 id="firstName"
                 name="firstName"
@@ -77,7 +79,7 @@ export function EmployeeForm({
                 required
               />
             </Field>
-            <Field label="Last name" htmlFor="lastName" error={fe.lastName}>
+            <Field label={t.employees.formLastName} htmlFor="lastName" error={fe.lastName}>
               <Input
                 id="lastName"
                 name="lastName"
@@ -87,7 +89,7 @@ export function EmployeeForm({
             </Field>
           </div>
 
-          <Field label="Email" htmlFor="email" error={fe.email}>
+          <Field label={t.common.email} htmlFor="email" error={fe.email}>
             <Input
               id="email"
               name="email"
@@ -99,7 +101,7 @@ export function EmployeeForm({
 
           <div className="grid gap-4 sm:grid-cols-2">
             <Field
-              label="Annual budget (EUR)"
+              label={t.employees.formAnnualBudget}
               htmlFor="annualBudget"
               error={fe.annualBudget}
             >
@@ -113,7 +115,7 @@ export function EmployeeForm({
                 required
               />
             </Field>
-            <Field label="Status" htmlFor="status">
+            <Field label={t.common.status} htmlFor="status">
               <Select
                 id="status"
                 name="status"
@@ -121,15 +123,15 @@ export function EmployeeForm({
                   defaultValues?.active === false ? "inactive" : "active"
                 }
               >
-                <option value="active">Active</option>
-                <option value="inactive">Inactive</option>
+                <option value="active">{t.common.active}</option>
+                <option value="inactive">{t.common.inactive}</option>
               </Select>
             </Field>
           </div>
 
           <div className="flex justify-end gap-2 pt-2">
             <Button type="button" variant="outline" onClick={() => router.back()}>
-              Cancel
+              {t.common.cancel}
             </Button>
             <SubmitButton>{submitLabel}</SubmitButton>
           </div>

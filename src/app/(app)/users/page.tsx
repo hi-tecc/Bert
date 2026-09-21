@@ -11,6 +11,7 @@ import { Table, TBody, TD, TH, THead, TR } from "@/components/ui/table";
 import { MobileCards, MobileCard, MobileCardRow } from "@/components/ui/mobile-card";
 import { Badge } from "@/components/ui/badge";
 import { DeleteButton } from "@/components/delete-button";
+import { getT } from "@/lib/i18n/server";
 
 export default async function UsersPage({
   searchParams,
@@ -18,6 +19,7 @@ export default async function UsersPage({
   searchParams: Promise<{ q?: string; role?: string }>;
 }) {
   const actor = await requireShopAdmin();
+  const t = await getT();
   const { q, role } = await searchParams;
 
   const users = await prisma.user.findMany({
@@ -39,30 +41,30 @@ export default async function UsersPage({
   });
 
   const roleLabel = (r: string) =>
-    r === ROLES.SHOP_ADMIN ? "Shop admin" : "Company admin";
+    r === ROLES.SHOP_ADMIN ? t.roles.shopAdmin : t.roles.companyAdmin;
 
   return (
     <div>
       <PageHeader
-        title="Users"
-        subtitle="Manage admin and customer login accounts"
+        title={t.nav.users}
+        subtitle={t.users.subtitle}
         action={
           <Link
             href="/users/new"
             className="inline-flex h-11 items-center gap-2 rounded-none bg-[var(--color-foreground)] px-6 text-xs font-medium uppercase tracking-[0.2em] text-[var(--color-primary-foreground)] shadow-[0_4px_16px_rgba(0,0,0,0.15)] transition-colors duration-500 hover:bg-[var(--color-accent)]"
           >
-            <Plus className="h-4 w-4" /> New user
+            <Plus className="h-4 w-4" /> {t.users.new}
           </Link>
         }
       />
 
-      <ListToolbar placeholder="Search users by name or email..." />
+      <ListToolbar placeholder={t.users.searchPlaceholder} />
 
       <Card>
         <CardContent className="p-0">
           {users.length === 0 ? (
             <p className="py-10 text-center text-sm text-slate-400">
-              No users found.
+              {t.users.none}
             </p>
           ) : (
             <>
@@ -70,11 +72,11 @@ export default async function UsersPage({
                 <Table>
                   <THead>
                     <TR>
-                      <TH>Name</TH>
-                      <TH>Email</TH>
-                      <TH>Role</TH>
-                      <TH>Company</TH>
-                      <TH className="text-right">Actions</TH>
+                      <TH>{t.common.name}</TH>
+                      <TH>{t.common.email}</TH>
+                      <TH>{t.common.role}</TH>
+                      <TH>{t.common.company}</TH>
+                      <TH className="text-right">{t.common.actions}</TH>
                     </TR>
                   </THead>
                   <TBody>
@@ -105,7 +107,7 @@ export default async function UsersPage({
                               href={`/users/${u.id}/edit`}
                               className="inline-flex h-9 items-center rounded-none border border-[var(--color-foreground)] bg-transparent px-5 text-[11px] font-medium uppercase tracking-[0.2em] transition-colors duration-500 hover:bg-[var(--color-foreground)] hover:text-[var(--color-primary-foreground)]"
                             >
-                              Edit
+                              {t.common.edit}
                             </Link>
                             {u.id !== actor.id && (
                               <DeleteButton id={u.id} action={deleteUserAction} />
@@ -134,8 +136,8 @@ export default async function UsersPage({
                         {roleLabel(u.role)}
                       </Badge>
                     </div>
-                    <MobileCardRow label="Email">{u.email}</MobileCardRow>
-                    <MobileCardRow label="Company">
+                    <MobileCardRow label={t.common.email}>{u.email}</MobileCardRow>
+                    <MobileCardRow label={t.common.company}>
                       {u.company?.name ?? "—"}
                     </MobileCardRow>
                     <div className="mt-3 flex gap-2">
@@ -143,7 +145,7 @@ export default async function UsersPage({
                         href={`/users/${u.id}/edit`}
                         className="inline-flex h-9 flex-1 items-center justify-center rounded-none border border-[var(--color-foreground)] bg-transparent px-5 text-[11px] font-medium uppercase tracking-[0.2em] transition-colors duration-500 hover:bg-[var(--color-foreground)] hover:text-[var(--color-primary-foreground)]"
                       >
-                        Edit
+                        {t.common.edit}
                       </Link>
                       {u.id !== actor.id && (
                         <DeleteButton id={u.id} action={deleteUserAction} />

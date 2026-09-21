@@ -7,19 +7,22 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { SubmitButton } from "@/components/ui/submit-button";
+import { useI18n } from "@/lib/i18n/context";
 
 export default function LoginPage() {
   const [state, action] = useActionState<ActionState, FormData>(loginAction, {});
+  const { t } = useI18n();
 
   return (
     <Card>
       <CardContent className="p-8">
         <div className="mb-8">
           <h2 className="font-serif text-2xl tracking-tight">
-            Welcome <span className="italic text-[var(--color-accent)]">back</span>
+            {t.auth.welcome}{" "}
+            <span className="italic text-[var(--color-accent)]">{t.auth.welcomeAccent}</span>
           </h2>
           <p className="mt-1 text-sm text-[var(--color-muted)]">
-            Sign in to continue to your account.
+            {t.auth.signInSubtitle}
           </p>
         </div>
         <form action={action} className="space-y-6">
@@ -29,7 +32,7 @@ export default function LoginPage() {
             </p>
           )}
           <div>
-            <Label htmlFor="email">Email</Label>
+            <Label htmlFor="email">{t.auth.email}</Label>
             <Input
               id="email"
               name="email"
@@ -40,17 +43,17 @@ export default function LoginPage() {
             />
           </div>
           <div>
-            <Label htmlFor="password">Password</Label>
+            <Label htmlFor="password">{t.auth.password}</Label>
             <Input
               id="password"
               name="password"
               type="password"
               autoComplete="current-password"
-              placeholder="Enter your password"
+              placeholder={t.auth.passwordPlaceholder}
               required
             />
           </div>
-          <SubmitButton className="w-full">Sign in</SubmitButton>
+          <SubmitButton className="w-full">{t.auth.signIn}</SubmitButton>
         </form>
 
         <div className="mt-6 text-center">
@@ -58,16 +61,16 @@ export default function LoginPage() {
             href="/forgot-password"
             className="text-xs uppercase tracking-[0.2em] text-[var(--color-muted)] transition-colors duration-500 hover:text-[var(--color-accent)]"
           >
-            Forgot your password?
+            {t.auth.forgotPassword}
           </Link>
         </div>
 
         <div className="mt-8 border-t border-[var(--color-border)] pt-5 text-xs text-[var(--color-muted)]">
           <p className="mb-1 text-[10px] uppercase tracking-[0.2em] text-[var(--color-foreground)]">
-            Demo accounts
+            {t.auth.demoAccounts}
           </p>
-          <p>Shop admin: admin@shop.test / admin123</p>
-          <p>Company admin: acme@company.test / company123</p>
+          <p>{t.auth.demoShop}</p>
+          <p>{t.auth.demoCompany}</p>
         </div>
       </CardContent>
     </Card>

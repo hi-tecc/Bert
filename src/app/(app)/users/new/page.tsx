@@ -3,9 +3,11 @@ import { prisma } from "@/lib/prisma";
 import { createUserAction } from "@/lib/actions/users";
 import { PageHeader } from "@/components/page-header";
 import { UserForm } from "@/components/users/user-form";
+import { getT } from "@/lib/i18n/server";
 
 export default async function NewUserPage() {
   await requireShopAdmin();
+  const t = await getT();
   const companies = await prisma.company.findMany({
     select: { id: true, name: true },
     orderBy: { name: "asc" },
@@ -13,11 +15,11 @@ export default async function NewUserPage() {
 
   return (
     <div className="max-w-2xl">
-      <PageHeader title="New user" subtitle="Add an admin or customer login" emphasizeLast />
+      <PageHeader title={t.users.newTitle} subtitle={t.users.newSubtitle} emphasizeLast />
       <UserForm
         action={createUserAction}
         companies={companies}
-        submitLabel="Create user"
+        submitLabel={t.users.createSubmit}
       />
     </div>
   );

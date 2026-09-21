@@ -1,8 +1,11 @@
-export default function AuthLayout({
+import { getT } from "@/lib/i18n/server";
+
+export default async function AuthLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
+  const t = await getT();
   return (
     <div className="flex min-h-screen items-center justify-center bg-[var(--color-background)] p-6">
       <div className="w-full max-w-sm">
@@ -12,10 +15,10 @@ export default function AuthLayout({
           </div>
           <div className="mx-auto mb-4 h-px w-8 bg-[var(--color-accent)]" />
           <h1 className="font-serif text-3xl tracking-tight text-[var(--color-foreground)]">
-            Budget Tracker
+            {t.common.appName}
           </h1>
           <p className="mt-2 text-[10px] uppercase tracking-[0.3em] text-[var(--color-muted)]">
-            Company Spending Management
+            {t.common.tagline}
           </p>
         </div>
         {children}

@@ -7,9 +7,11 @@ import { Menu, X } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { navItemsForRole, isNavItemActive } from "./nav-items";
 import type { Role } from "@/lib/constants";
+import { useI18n } from "@/lib/i18n/context";
 
 export function MobileNav({ role }: { role: Role }) {
   const pathname = usePathname();
+  const { t } = useI18n();
   const [open, setOpen] = useState(false);
   const items = navItemsForRole(role);
 
@@ -37,7 +39,7 @@ export function MobileNav({ role }: { role: Role }) {
       <button
         type="button"
         onClick={() => setOpen(true)}
-        aria-label="Open menu"
+        aria-label={t.topbar.openMenu}
         aria-expanded={open}
         className="flex h-9 w-9 items-center justify-center rounded-none text-[var(--color-muted)] transition-colors duration-500 hover:bg-[var(--color-muted-bg)] hover:text-[var(--color-foreground)]"
       >
@@ -56,12 +58,12 @@ export function MobileNav({ role }: { role: Role }) {
                 <div className="flex h-9 w-9 items-center justify-center rounded-none bg-[var(--color-foreground)] font-serif text-lg text-[var(--color-primary-foreground)]">
                   B
                 </div>
-                <span className="font-serif text-lg tracking-tight">Budget Tracker</span>
+                <span className="font-serif text-lg tracking-tight">{t.common.appName}</span>
               </div>
               <button
                 type="button"
                 onClick={() => setOpen(false)}
-                aria-label="Close menu"
+                aria-label={t.topbar.closeMenu}
                 className="flex h-9 w-9 items-center justify-center rounded-none text-[var(--color-muted)] transition-colors duration-500 hover:bg-[var(--color-muted-bg)] hover:text-[var(--color-foreground)]"
               >
                 <X className="h-5 w-5" strokeWidth={1.5} />
@@ -83,7 +85,7 @@ export function MobileNav({ role }: { role: Role }) {
                     )}
                   >
                     <Icon className="h-4 w-4" strokeWidth={1.5} />
-                    {item.label}
+                    {t.nav[item.labelKey]}
                   </Link>
                 );
               })}

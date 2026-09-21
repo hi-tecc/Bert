@@ -6,6 +6,7 @@ import { Select } from "@/components/ui/select";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Field } from "@/components/field";
+import { useI18n } from "@/lib/i18n/context";
 
 export interface EmployeeOption {
   id: string;
@@ -24,6 +25,7 @@ export function ReportFilters({
 }) {
   const router = useRouter();
   const params = useSearchParams();
+  const { t } = useI18n();
 
   const [companyId, setCompanyId] = useState(params.get("companyId") ?? "");
   const [employeeId, setEmployeeId] = useState(params.get("employeeId") ?? "");
@@ -60,7 +62,7 @@ export function ReportFilters({
   return (
     <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
       {showCompany && (
-        <Field label="Company">
+        <Field label={t.common.company}>
           <Select
             value={companyId}
             onChange={(e) => {
@@ -68,7 +70,7 @@ export function ReportFilters({
               setEmployeeId("");
             }}
           >
-            <option value="">All companies</option>
+            <option value="">{t.reports.allCompanies}</option>
             {companies.map((c) => (
               <option key={c.id} value={c.id}>
                 {c.name}
@@ -77,12 +79,12 @@ export function ReportFilters({
           </Select>
         </Field>
       )}
-      <Field label="Employee">
+      <Field label={t.common.employee}>
         <Select
           value={employeeId}
           onChange={(e) => setEmployeeId(e.target.value)}
         >
-          <option value="">All employees</option>
+          <option value="">{t.reports.allEmployees}</option>
           {visibleEmployees.map((e) => (
             <option key={e.id} value={e.id}>
               {e.label}
@@ -90,20 +92,20 @@ export function ReportFilters({
           ))}
         </Select>
       </Field>
-      <Field label="From">
+      <Field label={t.reports.from}>
         <Input type="date" value={from} onChange={(e) => setFrom(e.target.value)} />
       </Field>
-      <Field label="To">
+      <Field label={t.reports.to}>
         <Input type="date" value={to} onChange={(e) => setTo(e.target.value)} />
       </Field>
 
       <div className="flex flex-wrap items-center gap-2 md:col-span-2 lg:col-span-4">
-        <Button onClick={apply}>Generate report</Button>
+        <Button onClick={apply}>{t.reports.generate}</Button>
         <Button variant="outline" onClick={thisYear}>
-          Current year
+          {t.reports.currentYear}
         </Button>
         <Button variant="ghost" onClick={reset}>
-          Reset
+          {t.reports.reset}
         </Button>
       </div>
     </div>

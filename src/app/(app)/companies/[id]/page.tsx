@@ -20,6 +20,7 @@ import { MobileCard, MobileCardRow } from "@/components/ui/mobile-card";
 import { BudgetBar } from "@/components/ui/budget-bar";
 import { BudgetStatusBadge } from "@/components/budget-status-badge";
 import { Users, Wallet, Euro, PiggyBank } from "lucide-react";
+import { getT } from "@/lib/i18n/server";
 
 export default async function CompanyDetailPage({
   params,
@@ -27,6 +28,7 @@ export default async function CompanyDetailPage({
   params: Promise<{ id: string }>;
 }) {
   await requireShopAdmin();
+  const t = await getT();
   const { id } = await params;
   const company = await prisma.company.findUnique({ where: { id } });
   if (!company) notFound();
@@ -48,13 +50,13 @@ export default async function CompanyDetailPage({
               href={`/employees/new?companyId=${id}`}
               className="inline-flex h-9 items-center gap-2 rounded-none bg-[var(--color-foreground)] px-5 text-[11px] font-medium uppercase tracking-[0.2em] text-[var(--color-primary-foreground)] transition-colors duration-500 hover:bg-[var(--color-accent)]"
             >
-              <Plus className="h-4 w-4" /> Add employee
+              <Plus className="h-4 w-4" /> {t.companies.addEmployee}
             </Link>
             <Link
               href={`/companies/${id}/edit`}
               className="inline-flex h-9 items-center gap-2 rounded-none border border-[var(--color-foreground)] bg-transparent px-5 text-[11px] font-medium uppercase tracking-[0.2em] transition-colors duration-500 hover:bg-[var(--color-foreground)] hover:text-[var(--color-primary-foreground)]"
             >
-              <Pencil className="h-4 w-4" /> Edit
+              <Pencil className="h-4 w-4" /> {t.common.edit}
             </Link>
             <form action={toggleCompanyActiveAction}>
               <input type="hidden" name="id" value={id} />
@@ -63,13 +65,13 @@ export default async function CompanyDetailPage({
                 className="inline-flex h-9 items-center gap-2 rounded-none border border-[var(--color-foreground)] bg-transparent px-5 text-[11px] font-medium uppercase tracking-[0.2em] transition-colors duration-500 hover:bg-[var(--color-foreground)] hover:text-[var(--color-primary-foreground)]"
               >
                 <Power className="h-4 w-4" />
-                {company.active ? "Deactivate" : "Activate"}
+                {company.active ? t.companies.deactivate : t.companies.activate}
               </button>
             </form>
             <DeleteButton
               id={id}
               action={deleteCompanyAction}
-              confirmMessage="Delete this company and all its employees and purchases?"
+              confirmMessage={t.companies.confirmDelete}
             />
           </div>
         }
@@ -78,32 +80,32 @@ export default async function CompanyDetailPage({
       <div className="mb-6 grid gap-4 md:grid-cols-3">
         <Card className="md:col-span-1">
           <CardHeader>
-            <CardTitle emphasizeLast>Company details</CardTitle>
+            <CardTitle emphasizeLast>{t.companies.companyDetails}</CardTitle>
           </CardHeader>
           <CardContent className="space-y-2 text-sm">
-            <Row label="Status">
+            <Row label={t.common.status}>
               <Badge tone={company.active ? "success" : "neutral"}>
-                {company.active ? "Active" : "Inactive"}
+                {company.active ? t.common.active : t.common.inactive}
               </Badge>
             </Row>
-            <Row label="Contact">{company.contactPerson ?? "—"}</Row>
-            <Row label="Email">{company.email ?? "—"}</Row>
-            <Row label="Phone">{company.phone ?? "—"}</Row>
-            <Row label="Address">{company.address ?? "—"}</Row>
+            <Row label={t.common.contact}>{company.contactPerson ?? "—"}</Row>
+            <Row label={t.common.email}>{company.email ?? "—"}</Row>
+            <Row label={t.common.phone}>{company.phone ?? "—"}</Row>
+            <Row label={t.common.address}>{company.address ?? "—"}</Row>
           </CardContent>
         </Card>
 
         <div className="grid gap-4 sm:grid-cols-2 md:col-span-2">
-          <StatCard label="Employees" value={String(employees.length)} icon={Users} />
-          <StatCard label="Annual budget" value={formatMoney(totalBudget)} icon={Wallet} />
+          <StatCard label={t.common.employees} value={String(employees.length)} icon={Users} />
+          <StatCard label={t.common.annualBudget} value={formatMoney(totalBudget)} icon={Wallet} />
           <StatCard
-            label="Spent"
+            label={t.common.spent}
             value={formatMoney(totalSpent)}
-            hint={`${summary.percent}% of budget`}
+            hint={t.common.percentOfBudget(summary.percent)}
             icon={Euro}
           />
           <StatCard
-            label="Remaining"
+            label={t.common.remaining}
             value={formatMoney(summary.remaining)}
             icon={PiggyBank}
           />
@@ -112,13 +114,13 @@ export default async function CompanyDetailPage({
 
       <Card>
         <CardHeader className="flex items-center justify-between">
-          <CardTitle>Employees</CardTitle>
+          <CardTitle>{t.common.employees}</CardTitle>
           <BudgetStatusBadge level={summary.level} percent={summary.percent} />
         </CardHeader>
         <CardContent className="pt-3">
           {employees.length === 0 ? (
             <p className="py-6 text-center text-sm text-slate-400">
-              No employees yet.
+              {t.dashboard.noEmployeesYet}
             </p>
           ) : (
             <>
@@ -126,11 +128,11 @@ export default async function CompanyDetailPage({
                 <Table>
                   <THead>
                     <TR>
-                      <TH>Employee</TH>
-                      <TH className="text-right">Budget</TH>
-                      <TH className="text-right">Spent</TH>
-                      <TH className="text-right">Remaining</TH>
-                      <TH className="w-40">Usage</TH>
+                      <TH>{t.common.employee}</TH>
+                      <TH className="text-right">{t.common.budget}</TH>
+                      <TH className="text-right">{t.common.spent}</TH>
+                      <TH className="text-right">{t.common.remaining}</TH>
+                      <TH className="w-40">{t.common.usage}</TH>
                     </TR>
                   </THead>
                   <TBody>
@@ -145,7 +147,7 @@ export default async function CompanyDetailPage({
                           </Link>
                           {!e.active && (
                             <Badge tone="neutral" className="ml-2">
-                              Inactive
+                              {t.common.inactive}
                             </Badge>
                           )}
                         </TD>
@@ -176,15 +178,15 @@ export default async function CompanyDetailPage({
                       >
                         {e.firstName} {e.lastName}
                       </Link>
-                      {!e.active && <Badge tone="neutral">Inactive</Badge>}
+                      {!e.active && <Badge tone="neutral">{t.common.inactive}</Badge>}
                     </div>
-                    <MobileCardRow label="Budget">
+                    <MobileCardRow label={t.common.budget}>
                       {formatMoney(e.annualBudget)}
                     </MobileCardRow>
-                    <MobileCardRow label="Spent">
+                    <MobileCardRow label={t.common.spent}>
                       {formatMoney(e.status.spent)}
                     </MobileCardRow>
-                    <MobileCardRow label="Remaining">
+                    <MobileCardRow label={t.common.remaining}>
                       {formatMoney(e.status.remaining)}
                     </MobileCardRow>
                     <div className="mt-2">

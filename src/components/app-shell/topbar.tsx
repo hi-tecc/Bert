@@ -6,7 +6,9 @@ import { useState } from "react";
 import { Search, LogOut } from "lucide-react";
 import { logoutAction } from "@/lib/actions/auth";
 import { ROLES, type Role } from "@/lib/constants";
+import { useI18n } from "@/lib/i18n/context";
 import { MobileNav } from "./mobile-nav";
+import { LanguagePicker } from "./language-picker";
 
 export function Topbar({
   name,
@@ -16,9 +18,10 @@ export function Topbar({
   role: Role;
 }) {
   const router = useRouter();
+  const { t } = useI18n();
   const [query, setQuery] = useState("");
 
-  const roleLabel = role === ROLES.SHOP_ADMIN ? "Shop admin" : "Company admin";
+  const roleLabel = role === ROLES.SHOP_ADMIN ? t.roles.shopAdmin : t.roles.companyAdmin;
 
   function onSearch(e: React.FormEvent) {
     e.preventDefault();
@@ -35,7 +38,7 @@ export function Topbar({
           <input
             value={query}
             onChange={(e) => setQuery(e.target.value)}
-            placeholder="Search companies, employees, purchases…"
+            placeholder={t.topbar.searchPlaceholder}
             className="h-11 w-full rounded-none border-0 border-b border-[var(--color-foreground)]/30 bg-transparent pl-7 pr-4 text-sm outline-none transition-colors duration-500 placeholder:font-serif placeholder:italic placeholder:text-[var(--color-muted)] focus-visible:border-[var(--color-accent)]"
           />
         </form>
@@ -44,11 +47,12 @@ export function Topbar({
       <div className="flex items-center gap-2 sm:gap-3">
         <Link
           href="/search"
-          aria-label="Search"
+          aria-label={t.topbar.search}
           className="flex h-9 w-9 items-center justify-center rounded-none text-[var(--color-muted)] transition-colors duration-500 hover:bg-[var(--color-muted-bg)] hover:text-[var(--color-foreground)] md:hidden"
         >
           <Search className="h-4 w-4" strokeWidth={1.5} />
         </Link>
+        <LanguagePicker />
         <div className="hidden text-right sm:block">
           <p className="text-sm font-medium leading-tight">{name}</p>
           <p className="text-[10px] uppercase tracking-[0.2em] text-[var(--color-muted)]">{roleLabel}</p>
@@ -56,7 +60,7 @@ export function Topbar({
         <form action={logoutAction}>
           <button
             type="submit"
-            title="Sign out"
+            title={t.topbar.signOut}
             className="flex h-9 w-9 items-center justify-center rounded-none text-[var(--color-muted)] transition-colors duration-500 hover:bg-[var(--color-muted-bg)] hover:text-[var(--color-foreground)]"
           >
             <LogOut className="h-4 w-4" strokeWidth={1.5} />

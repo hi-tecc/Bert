@@ -1,5 +1,6 @@
 import { requireUser } from "@/lib/session";
 import { ROLES } from "@/lib/constants";
+import { getT } from "@/lib/i18n/server";
 import { ShopDashboard } from "@/components/dashboard/shop-dashboard";
 import { CompanyDashboard } from "@/components/dashboard/company-dashboard";
 
@@ -11,9 +12,10 @@ export default async function DashboardPage() {
   }
 
   if (!user.companyId) {
+    const t = await getT();
     return (
       <p className="text-sm text-slate-500">
-        Your account is not linked to a company. Contact the shop administrator.
+        {t.dashboard.notLinked}
       </p>
     );
   }

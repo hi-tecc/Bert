@@ -4,6 +4,7 @@ import { ROLES } from "@/lib/constants";
 import { createEmployeeAction } from "@/lib/actions/employees";
 import { PageHeader } from "@/components/page-header";
 import { EmployeeForm } from "@/components/employees/employee-form";
+import { getT } from "@/lib/i18n/server";
 
 export default async function NewEmployeePage({
   searchParams,
@@ -11,6 +12,7 @@ export default async function NewEmployeePage({
   searchParams: Promise<{ companyId?: string }>;
 }) {
   const user = await requireUser();
+  const t = await getT();
   const { companyId } = await searchParams;
   const isShopAdmin = user.role === ROLES.SHOP_ADMIN;
 
@@ -24,13 +26,13 @@ export default async function NewEmployeePage({
 
   return (
     <div className="max-w-2xl">
-      <PageHeader title="New employee" subtitle="Add an employee to a company" emphasizeLast />
+      <PageHeader title={t.employees.newTitle} subtitle={t.employees.newSubtitle} emphasizeLast />
       <EmployeeForm
         action={createEmployeeAction}
         companies={companies}
         lockedCompanyId={isShopAdmin ? undefined : (user.companyId ?? undefined)}
         defaultValues={companyId ? { companyId } : undefined}
-        submitLabel="Create employee"
+        submitLabel={t.employees.createSubmit}
       />
     </div>
   );

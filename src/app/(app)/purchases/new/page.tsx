@@ -4,6 +4,7 @@ import { prisma } from "@/lib/prisma";
 import { createPurchaseAction } from "@/lib/actions/purchases";
 import { PageHeader } from "@/components/page-header";
 import { PurchaseForm } from "@/components/purchases/purchase-form";
+import { getT } from "@/lib/i18n/server";
 
 export default async function NewPurchasePage({
   searchParams,
@@ -11,30 +12,39 @@ export default async function NewPurchasePage({
   searchParams: Promise<{ employeeId?: string }>;
 }) {
   await requireShopAdmin();
+  const t = await getT();
   const { employeeId } = await searchParams;
 
-  const employees = await prisma.employee.findMany({
-    where: { active: true },
-    include: { company: { select: { name: true } } },
-    orderBy: [{ company: { name: "asc" } }, { lastName: "asc" }],
-  });
+  const [companies, employees] = await Promise.all([
+    prisma.company.findMany({
+      where: { active: true },
+      orderBy: { name: "asc" },
+    }),
+    prisma.employee.findMany({
+      where: { active: true },
+      orderBy: [{ company: { name: "asc" } }, { lastName: "asc" }],
+    }),
+  ]);
 
-  const options = employees.map((e) => ({
+  const companyOptions = companies.map((c) => ({ id: c.id, label: c.name }));
+  const employeeOptions = employees.map((e) => ({
     id: e.id,
-    label: `${e.company.name} — ${e.firstName} ${e.lastName}`,
+    companyId: e.companyId,
+    label: `${e.firstName} ${e.lastName}`,
   }));
 
   return (
     <div className="max-w-2xl">
-      <PageHeader title="Register purchase" subtitle="Record a new purchase" emphasizeLast />
+      <PageHeader title={t.purchases.newTitle} subtitle={t.purchases.newSubtitle} emphasizeLast />
       <PurchaseForm
         action={createPurchaseAction}
-        employees={options}
+        companies={companyOptions}
+        employees={employeeOptions}
         defaultValues={{
           employeeId,
           date: format(new Date(), "yyyy-MM-dd"),
         }}
-        submitLabel="Register purchase"
+        submitLabel={t.purchases.register}
       />
     </div>
   );

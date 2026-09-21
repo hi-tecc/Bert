@@ -9,6 +9,7 @@ import { Button } from "@/components/ui/button";
 import { SubmitButton } from "@/components/ui/submit-button";
 import { Field } from "@/components/field";
 import type { FormState } from "@/lib/actions/form-state";
+import { useI18n } from "@/lib/i18n/context";
 
 interface CompanyValues {
   name?: string;
@@ -31,6 +32,7 @@ export function CompanyForm({
   const router = useRouter();
   const [state, formAction] = useActionState<FormState, FormData>(action, {});
   const fe = state.fieldErrors ?? {};
+  const { t } = useI18n();
 
   return (
     <Card>
@@ -41,7 +43,7 @@ export function CompanyForm({
               {state.error}
             </p>
           )}
-          <Field label="Company name" htmlFor="name" error={fe.name}>
+          <Field label={t.companies.formName} htmlFor="name" error={fe.name}>
             <Input
               id="name"
               name="name"
@@ -50,14 +52,14 @@ export function CompanyForm({
             />
           </Field>
           <div className="grid gap-4 sm:grid-cols-2">
-            <Field label="Contact person" htmlFor="contactPerson" error={fe.contactPerson}>
+            <Field label={t.companies.formContactPerson} htmlFor="contactPerson" error={fe.contactPerson}>
               <Input
                 id="contactPerson"
                 name="contactPerson"
                 defaultValue={defaultValues?.contactPerson ?? ""}
               />
             </Field>
-            <Field label="Status" htmlFor="status">
+            <Field label={t.common.status} htmlFor="status">
               <Select
                 id="status"
                 name="status"
@@ -65,13 +67,13 @@ export function CompanyForm({
                   defaultValues?.active === false ? "inactive" : "active"
                 }
               >
-                <option value="active">Active</option>
-                <option value="inactive">Inactive</option>
+                <option value="active">{t.common.active}</option>
+                <option value="inactive">{t.common.inactive}</option>
               </Select>
             </Field>
           </div>
           <div className="grid gap-4 sm:grid-cols-2">
-            <Field label="Email" htmlFor="email" error={fe.email}>
+            <Field label={t.common.email} htmlFor="email" error={fe.email}>
               <Input
                 id="email"
                 name="email"
@@ -79,7 +81,7 @@ export function CompanyForm({
                 defaultValue={defaultValues?.email ?? ""}
               />
             </Field>
-            <Field label="Phone" htmlFor="phone" error={fe.phone}>
+            <Field label={t.common.phone} htmlFor="phone" error={fe.phone}>
               <Input
                 id="phone"
                 name="phone"
@@ -87,7 +89,7 @@ export function CompanyForm({
               />
             </Field>
           </div>
-          <Field label="Address" htmlFor="address" error={fe.address}>
+          <Field label={t.common.address} htmlFor="address" error={fe.address}>
             <Input
               id="address"
               name="address"
@@ -96,7 +98,7 @@ export function CompanyForm({
           </Field>
           <div className="flex justify-end gap-2 pt-2">
             <Button type="button" variant="outline" onClick={() => router.back()}>
-              Cancel
+              {t.common.cancel}
             </Button>
             <SubmitButton>{submitLabel}</SubmitButton>
           </div>

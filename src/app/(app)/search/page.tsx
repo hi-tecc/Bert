@@ -1,12 +1,13 @@
 import Link from "next/link";
-import { format } from "date-fns";
 import { Building2, Users, ShoppingCart } from "lucide-react";
 import type { Prisma } from "@prisma/client";
 import { requireUser, isShopAdmin } from "@/lib/session";
 import { prisma } from "@/lib/prisma";
 import { formatMoney } from "@/lib/money";
+import { formatDate } from "@/lib/date";
 import { PageHeader } from "@/components/page-header";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { getT } from "@/lib/i18n/server";
 
 export default async function SearchPage({
   searchParams,
@@ -14,6 +15,7 @@ export default async function SearchPage({
   searchParams: Promise<{ q?: string }>;
 }) {
   const user = await requireUser();
+  const t = await getT();
   const { q } = await searchParams;
   const shopAdmin = isShopAdmin(user);
   const query = (q ?? "").trim();
@@ -66,15 +68,15 @@ export default async function SearchPage({
   return (
     <div>
       <PageHeader
-        title="Search"
-        subtitle={query ? `${total} results for “${query}”` : "Enter a search term"}
+        title={t.search.title}
+        subtitle={query ? t.search.resultsFor(total, query) : t.search.enterTerm}
       />
 
       {query && total === 0 && (
         <Card>
           <CardContent>
             <p className="py-6 text-center text-sm text-slate-400">
-              No results found.
+              {t.search.none}
             </p>
           </CardContent>
         </Card>
@@ -85,7 +87,7 @@ export default async function SearchPage({
           <Card>
             <CardHeader className="flex items-center gap-2">
               <Building2 className="h-4 w-4 text-slate-400" />
-              <CardTitle>Companies</CardTitle>
+              <CardTitle>{t.common.companies}</CardTitle>
             </CardHeader>
             <CardContent className="space-y-1">
               {companies.map((c) => (
@@ -108,7 +110,7 @@ export default async function SearchPage({
           <Card>
             <CardHeader className="flex items-center gap-2">
               <Users className="h-4 w-4 text-slate-400" />
-              <CardTitle>Employees</CardTitle>
+              <CardTitle>{t.common.employees}</CardTitle>
             </CardHeader>
             <CardContent className="space-y-1">
               {employees.map((e) => (
@@ -134,7 +136,7 @@ export default async function SearchPage({
           <Card>
             <CardHeader className="flex items-center gap-2">
               <ShoppingCart className="h-4 w-4 text-slate-400" />
-              <CardTitle>Purchases</CardTitle>
+              <CardTitle>{t.common.purchases}</CardTitle>
             </CardHeader>
             <CardContent className="space-y-1">
               {purchases.map((p) => (
@@ -148,7 +150,7 @@ export default async function SearchPage({
                     <span className="text-slate-400">
                       {" "}
                       · {p.employee.firstName} {p.employee.lastName} ·{" "}
-                      {format(p.date, "MMM d, yyyy")}
+                      {formatDate(p.date)}
                     </span>
                   </span>
                   <span className="font-medium">{formatMoney(p.amount)}</span>

@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { Card, CardContent } from "@/components/ui/card";
+import { getT } from "@/lib/i18n/server";
 import { ResetPasswordForm } from "./reset-form";
 
 export default async function ResetPasswordPage({
@@ -10,18 +11,19 @@ export default async function ResetPasswordPage({
   const { token } = await searchParams;
 
   if (!token) {
+    const t = await getT();
     return (
       <Card>
         <CardContent>
           <p className="text-sm text-slate-600">
-            Missing reset token. Please request a new{" "}
+            {t.auth.missingTokenPrefix}
             <Link
               href="/forgot-password"
               className="text-[var(--color-primary)] hover:underline"
             >
-              password reset
+              {t.auth.missingTokenLink}
             </Link>
-            .
+            {t.auth.missingTokenSuffix}
           </p>
         </CardContent>
       </Card>
