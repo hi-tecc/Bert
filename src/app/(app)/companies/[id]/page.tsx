@@ -21,6 +21,7 @@ import { BudgetBar } from "@/components/ui/budget-bar";
 import { BudgetStatusBadge } from "@/components/budget-status-badge";
 import { Users, Wallet, Euro, PiggyBank } from "lucide-react";
 import { getT } from "@/lib/i18n/server";
+import { interpolate } from "@/lib/i18n/config";
 
 export default async function CompanyDetailPage({
   params,
@@ -101,7 +102,7 @@ export default async function CompanyDetailPage({
           <StatCard
             label={t.common.spent}
             value={formatMoney(totalSpent)}
-            hint={t.common.percentOfBudget(summary.percent)}
+            hint={interpolate(t.common.percentOfBudget, { value: summary.percent })}
             icon={Euro}
           />
           <StatCard

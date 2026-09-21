@@ -14,6 +14,7 @@ import {
 } from "@/components/dashboard/recent-purchases";
 import { SpendingChart } from "@/components/dashboard/spending-chart";
 import { getT } from "@/lib/i18n/server";
+import { interpolate } from "@/lib/i18n/config";
 
 export async function ShopDashboard() {
   const t = await getT();
@@ -73,7 +74,7 @@ export async function ShopDashboard() {
           icon={Euro}
         />
         <StatCard
-          label={t.dashboard.spendingIn(year)}
+          label={interpolate(t.dashboard.spendingIn, { year })}
           value={formatMoney(thisYear._sum.amount ?? 0)}
           icon={TrendingUp}
         />

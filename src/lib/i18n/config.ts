@@ -14,3 +14,13 @@ export const LOCALE_LABELS: Record<Locale, string> = {
 export function isLocale(value: unknown): value is Locale {
   return typeof value === "string" && (LOCALES as readonly string[]).includes(value);
 }
+
+/** Replace {token} placeholders in a translation string with values. */
+export function interpolate(
+  template: string,
+  vars: Record<string, string | number>,
+): string {
+  return template.replace(/\{(\w+)\}/g, (_, key) =>
+    key in vars ? String(vars[key]) : `{${key}}`,
+  );
+}

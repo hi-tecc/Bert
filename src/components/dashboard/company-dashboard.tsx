@@ -15,6 +15,7 @@ import {
   type RecentPurchaseRow,
 } from "@/components/dashboard/recent-purchases";
 import { getT } from "@/lib/i18n/server";
+import { interpolate } from "@/lib/i18n/config";
 
 export async function CompanyDashboard({ companyId }: { companyId: string }) {
   const t = await getT();
@@ -53,7 +54,7 @@ export async function CompanyDashboard({ companyId }: { companyId: string }) {
     <div className="space-y-6">
       <div>
         <h1 className="font-serif text-3xl tracking-tight md:text-4xl">{company.name}</h1>
-        <p className="mt-1.5 text-sm text-[var(--color-muted)]">{t.dashboard.companyOverview(year)}</p>
+        <p className="mt-1.5 text-sm text-[var(--color-muted)]">{interpolate(t.dashboard.companyOverview, { year })}</p>
       </div>
 
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
@@ -66,7 +67,7 @@ export async function CompanyDashboard({ companyId }: { companyId: string }) {
         <StatCard
           label={t.common.spent}
           value={formatMoney(totalSpent)}
-          hint={t.common.percentOfBudget(summary.percent)}
+          hint={interpolate(t.common.percentOfBudget, { value: summary.percent })}
           icon={Euro}
         />
         <StatCard

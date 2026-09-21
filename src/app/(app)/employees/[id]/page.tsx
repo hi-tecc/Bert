@@ -18,6 +18,7 @@ import { BudgetBar } from "@/components/ui/budget-bar";
 import { BudgetStatusBadge } from "@/components/budget-status-badge";
 import { Wallet, Euro, PiggyBank } from "lucide-react";
 import { getT } from "@/lib/i18n/server";
+import { interpolate } from "@/lib/i18n/config";
 
 export default async function EmployeeDetailPage({
   params,
@@ -79,9 +80,9 @@ export default async function EmployeeDetailPage({
       <div className="mb-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
         <StatCard label={t.common.annualBudget} value={formatMoney(employee.annualBudget)} icon={Wallet} />
         <StatCard
-          label={t.employees.spentIn(year)}
+          label={interpolate(t.employees.spentIn, { year })}
           value={formatMoney(spent)}
-          hint={t.common.percentOfBudget(bs.percent)}
+          hint={interpolate(t.common.percentOfBudget, { value: bs.percent })}
           icon={Euro}
         />
         <StatCard label={t.common.remaining} value={formatMoney(bs.remaining)} icon={PiggyBank} />
@@ -100,7 +101,7 @@ export default async function EmployeeDetailPage({
 
       <Card>
         <CardHeader className="flex items-center justify-between">
-          <CardTitle>{t.employees.purchaseHistory(year)}</CardTitle>
+          <CardTitle>{interpolate(t.employees.purchaseHistory, { year })}</CardTitle>
           {!employee.active && <Badge tone="neutral">{t.employees.inactiveEmployee}</Badge>}
         </CardHeader>
         <CardContent className="pt-3">

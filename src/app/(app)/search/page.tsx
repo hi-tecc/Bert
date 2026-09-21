@@ -8,6 +8,7 @@ import { formatDate } from "@/lib/date";
 import { PageHeader } from "@/components/page-header";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { getT } from "@/lib/i18n/server";
+import { interpolate } from "@/lib/i18n/config";
 
 export default async function SearchPage({
   searchParams,
@@ -69,7 +70,7 @@ export default async function SearchPage({
     <div>
       <PageHeader
         title={t.search.title}
-        subtitle={query ? t.search.resultsFor(total, query) : t.search.enterTerm}
+        subtitle={query ? interpolate(t.search.resultsFor, { count: total, query }) : t.search.enterTerm}
       />
 
       {query && total === 0 && (
